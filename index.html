@@ -120,6 +120,13 @@ h3.grp+.style{border-top:0}
 .legend{font-size:13px;color:#a9a69c;margin-top:12px;display:flex;flex-wrap:wrap;gap:4px 16px}
 .legend b{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-2px;margin-right:5px}
 .ios{font-size:13px;color:#8b897f;margin-top:6px}
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px}
+.tools .tl{font-size:13px;color:#a9a69c;margin-right:4px}
+.tools button{min-height:40px;padding:0 12px;border-radius:9px;border:1px solid #4a4a45;background:#2a2a28;color:#e6e3da;font:inherit;font-size:14px;display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.tools button[aria-checked=true]{background:#efede6;color:#1e1e1d;border-color:#efede6;font-weight:700}
+.sw{width:18px;height:18px;border-radius:4px;display:inline-grid;place-items:center;font:700 11px/1 "IBM Plex Sans KR",sans-serif;color:#fff;flex:none}
+.sw.on{background:var(--hot)}.sw.acc{background:#ff7a50;box-shadow:0 0 0 2px #ffd2c2 inset}.sw.gh{background:#7a3424}.sw.off{background:#2e2e2c;border:1px dashed #77756d}.sw.cyc{background:#3a3a37;color:#efede6;font-size:13px}
+.ttip{font-size:13.5px;color:#cfccc2;margin:8px 0 0;max-width:90ch}
 .swhint{font-size:14px;color:#ffb39c;margin:10px 0 0;min-height:1.6em;max-width:90ch}.swhint:empty{display:none}
 .col .c{transition:transform .15s,width .15s}.gridbox.sw .c{width:18px;margin-left:3px}.c{box-shadow:0 0 0 1px #151514}
 @media(prefers-reduced-motion:reduce){.col .c{transition:none}}
@@ -202,6 +209,9 @@ footer{color:var(--mute);font-size:14px}
   .facts{grid-template-columns:minmax(0,1fr)}
   .facts dt{margin-top:6px;font-size:13px}
   .mini{bottom:10px;font-size:14px}
+  .tools{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+  .tools button{flex:none}
+  .tools .tl{flex:none}
   h2{font-size:28px}
 }
 </style>
@@ -234,6 +244,21 @@ footer{color:var(--mute);font-size:14px}
 <div class="meta" id="iMeta"></div>
 </div>
 <div class="gridbox scroll" id="gridbox"></div>
+<div class="tools" id="tools" role="radiogroup" aria-label="칸에 넣을 값">
+<span class="tl">칸에 넣을 값</span>
+<button type="button" role="radio" data-v="cyc" aria-checked="true"><b class="sw cyc">↻</b>순환</button>
+<button type="button" role="radio" data-v="x" aria-checked="false"><b class="sw on"></b>보통</button>
+<button type="button" role="radio" data-v="X" aria-checked="false"><b class="sw acc"></b>악센트</button>
+<button type="button" role="radio" data-v="g" aria-checked="false"><b class="sw gh"></b>고스트</button>
+<button type="button" role="radio" data-v="f" aria-checked="false"><b class="sw on">f</b>플램</button>
+<button type="button" role="radio" data-v="d" aria-checked="false"><b class="sw on">d</b>드래그</button>
+<button type="button" role="radio" data-v="2" aria-checked="false"><b class="sw on">2</b>두 번</button>
+<button type="button" role="radio" data-v="3" aria-checked="false"><b class="sw on">3</b>세 번</button>
+<button type="button" role="radio" data-v="z" aria-checked="false"><b class="sw on">z</b>버즈 롤</button>
+<button type="button" role="radio" data-v="h" aria-checked="false" hidden><b class="sw on">h</b>808 높은 음</button>
+<button type="button" role="radio" data-v="." aria-checked="false"><b class="sw off"></b>지우기</button>
+</div>
+<p class="ttip" id="ttip"></p>
 <div class="ctrl">
 <button class="play" id="play" type="button">▶ 재생</button>
 <label class="knob">템포 <input type="range" id="bpm" min="50" max="200" step="1"><output id="bpmOut"></output></label>
@@ -254,14 +279,7 @@ footer{color:var(--mute);font-size:14px}
 <div class="sbar"><label class="ghost filebtn">여러 파일 한꺼번에 불러오기<input type="file" id="multi" accept="audio/*" multiple hidden></label><button class="ghost" type="button" id="sclear">샘플 모두 지우기</button><span id="smsg" class="smsg"></span></div>
 <div class="slist" id="slist"></div>
 </details>
-<div class="legend">
-<span><b style="background:#ff7a50;box-shadow:0 0 0 2px #ffd2c2 inset"></b>악센트(세게)</span>
-<span><b style="background:var(--hot)"></b>보통</span>
-<span><b style="background:#7a3424"></b>고스트(아주 약하게)</span>
-<span>2·3 = 한 칸에 두 번·세 번(롤)</span><span>f 플램 · d 드래그 · z 버즈 롤</span>
-<span>칸 클릭: 보통 → 악센트 → 고스트 → 끄기</span>
-<span>악기 이름 클릭: 음소거</span>
-</div>
+
 <p class="ios">소리는 브라우저에서 합성한 드럼입니다. 공간감은 방 크기와 울림의 양을 함께 바꿉니다(손을 떼면 방 크기가 바뀌어요). 스윙은 패턴에 맞춰 8분 또는 16분 기준이 자동으로 골라지고, 직접 바꿀 수도 있어요. "사람처럼 치기"를 올리면 타이밍과 세기가 흔들리고, 하이햇은 정박이 세고 엇박이 약해지며, 스네어 백비트는 아주 살짝 늦게 들어갑니다(전자 악기는 제외). 0이면 모든 음이 똑같은 세기와 정확한 타이밍으로 나와요. 아이폰에서 소리가 안 나면 무음 모드를 꺼 주세요. 스페이스바로도 재생·정지할 수 있어요.</p>
 </section>
 </div>
@@ -906,7 +924,7 @@ function play(k,t,v,ch){
 const VEL={x:.78,X:1,g:.26,h:.9,'2':.6,'3':.55,f:.82,d:.8,z:.3};
 
 /* ---------- state ---------- */
-const S={cur:null,bars:[],bpm:100,swing:50,swingUser:0,swUnit:'8',room:35,human:0,muted:new Set(),playing:false,next:0,b:0,s:0,timer:null,queue:[],cells:{}};
+const S={brush:'cyc',cur:null,bars:[],bpm:100,swing:50,swingUser:0,swUnit:'8',room:35,human:0,muted:new Set(),playing:false,next:0,b:0,s:0,timer:null,queue:[],cells:{}};
 const $=id=>document.getElementById(id);
 const clone=bars=>bars.map(b=>({res:b.res,beats:b.beats||4,lab:b.lab,bold:b.bold,stick:b.stick||'',t:{...b.t}}));
 const rowsOf=bars=>ROWS.filter(([k])=>bars.some(b=>b.t[k]));
@@ -941,6 +959,7 @@ function drawGrid(){
   });
   $('gridbox').innerHTML=h+'</div>';
   S.cells={};document.querySelectorAll('#gridbox .col').forEach(c=>S.cells[c.dataset.c]=c);swVis();
+  const hb=document.querySelector('#tools [data-v="h"]');if(hb){hb.hidden=!rows.some(r=>r[0]==='b808');if(hb.hidden&&S.brush==='h')setBrush('cyc')}
 }
 function setCh(bi,s,k,ch){const bar=S.bars[bi];const n=bar.res*bar.beats;const a=(bar.t[k]||'.'.repeat(n)).split('');a[s]=ch;bar.t[k]=a.join('')}
 function cycle(ch,k){if(k==='b808')return ch==='.'?'x':ch==='x'?'h':'.';return ch==='.'?'x':ch==='x'?'X':ch==='X'?'g':'.'}
@@ -1078,10 +1097,26 @@ $('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-id]
 document.addEventListener('click',e=>{const b=e.target.closest('[data-load]');if(b){load(b.dataset.load,true);$('player').scrollIntoView({block:'start'})}});
 $('gridbox').addEventListener('click',e=>{
   const c=e.target.closest('button.c');
-  if(c){const bi=+c.dataset.b,s=+c.dataset.s,k=c.dataset.k;const ch=(S.bars[bi].t[k]||'')[s]||'.';const nx=cycle(ch,k);setCh(bi,s,k,nx);c.className=cls(nx);c.textContent=(nx==='h')?'h':'';swVis();return}
+  if(c){const ch=(S.bars[+c.dataset.b].t[c.dataset.k]||'')[+c.dataset.s]||'.';let nx;if(S.brush==='cyc')nx=cycle(ch,c.dataset.k);else{const v=normV(S.brush,c.dataset.k);nx=(ch===v&&v!=='.')?'.':v}putCell(c,nx);return}
   const r=e.target.closest('.r');if(r){const k=r.dataset.k;S.muted.has(k)?S.muted.delete(k):S.muted.add(k);r.classList.toggle('m');r.querySelector('i').textContent=S.muted.has(k)?'꺼짐':''}
 });
-$('gridbox').addEventListener('keydown',e=>{const r=e.target.closest('.r');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click()}});
+$('gridbox').addEventListener('keydown',e=>{const r=e.target.closest('.r');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click();return}
+  const c=e.target.closest('button.c');if(!c||e.ctrlKey||e.metaKey||e.altKey)return;
+  const KEY={x:'x',a:'X',g:'g',f:'f',d:'d','2':'2','3':'3',z:'z',h:'h',Delete:'.',Backspace:'.','0':'.'};
+  const v=KEY[e.key.length===1?e.key.toLowerCase():e.key];
+  if(v){e.preventDefault();putCell(c,normV(v,c.dataset.k));return}
+  const mv={ArrowLeft:[0,-1],ArrowRight:[0,1],ArrowUp:[-1,0],ArrowDown:[1,0]}[e.key];
+  if(mv){e.preventDefault();const k=c.dataset.k;let t=null;
+    if(mv[1]){const row=[...document.querySelectorAll('#gridbox button.c[data-k="'+k+'"]')];t=row[row.indexOf(c)+mv[1]]}
+    else{const ks=rowsOf(S.bars).map(r=>r[0]);const nk=ks[ks.indexOf(k)+mv[0]];if(nk)t=document.querySelector('#gridbox button.c[data-k="'+nk+'"][data-b="'+c.dataset.b+'"][data-s="'+c.dataset.s+'"]')}
+    if(t)t.focus()}
+});
+function normV(v,k){if(k==='b808')return v==='h'?'h':v==='.'?'.':'x';return v==='h'?'x':v}
+function putCell(c,nx){setCh(+c.dataset.b,+c.dataset.s,c.dataset.k,nx);c.className=cls(nx);c.textContent=SHOW.includes(nx)&&nx!=='.'?nx:'';swVis()}
+const TT={cyc:'칸을 누를 때마다 보통 → 악센트 → 고스트 → 지우기 순서로 바뀝니다.',x:'칸을 누르면 보통 세기로 들어갑니다.',X:'칸을 누르면 악센트(세게)로 들어갑니다.',g:'칸을 누르면 고스트(아주 약하게)로 들어갑니다.',f:'칸을 누르면 플램이 들어갑니다. 본음 바로 앞에 작은 꾸밈음 하나가 붙어요.',d:'칸을 누르면 드래그가 들어갑니다. 본음 앞에 꾸밈음 두 개가 붙어요.','2':'칸을 누르면 한 칸 안에서 두 번 칩니다(32분 롤).','3':'칸을 누르면 한 칸 안에서 세 번 칩니다(트랩 하이햇 롤 같은 빠른 롤).',z:'칸을 누르면 버즈 롤이 들어갑니다. 한 칸 안을 촘촘한 롤로 채워요.',h:'808 줄의 칸을 누르면 음을 높여 친 808이 들어갑니다.','.':'칸을 누르면 지워집니다.'};
+function setBrush(v){S.brush=v;document.querySelectorAll('#tools button').forEach(b=>b.setAttribute('aria-checked',b.dataset.v===v));$('ttip').textContent=TT[v]+(v!=='cyc'&&v!=='.'?' 같은 값이 든 칸을 다시 누르면 지워집니다.':'')+(matchMedia('(hover: none)').matches?'':' 칸을 선택한 뒤 키보드로도 넣을 수 있어요: X 보통 · A 악센트 · G 고스트 · F 플램 · D 드래그 · 2·3 롤 · Z 버즈 롤 · Delete 지우기 · 방향키 이동.')+' 악기 이름을 누르면 음소거됩니다.'}
+$('tools').addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(b)setBrush(b.dataset.v)});
+setBrush('cyc');
 $('play').addEventListener('click',toggle);$('miniStop').addEventListener('click',toggle);
 $('bpm').addEventListener('input',e=>{S.bpm=+e.target.value;$('bpmOut').textContent=S.bpm+' BPM';mini()});
 $('swing').addEventListener('input',e=>{S.swing=+e.target.value;S.swingUser=S.swing;$('swingOut').textContent=S.swing+'%';swVis()});
