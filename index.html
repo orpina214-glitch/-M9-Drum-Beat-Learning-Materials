@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>드럼 비트 학습자료</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 강사가 수강생 옆에서 직접 들려주며 설명하는 실습 노트. 차분하고 구체적으로.
+   IDEA: 스텝 시퀀서가 달린 드럼 머신. 페이지가 리듬 머신의 패널처럼 동작한다.
+   PICTURE: 첫 화면의 큰 시퀀서 패널. 칸이 불처럼 켜지며 재생 위치를 따라간다.
+   COLOUR and TYPE: 흰 바탕, 숯색 머신 패널, 적주황 스텝 램프 하나, 코발트 보조색. Black Han Sans 제목 + IBM Plex Sans KR 본문.
+   LAYOUT: 제목 → 시퀀서 → 읽는 법 → 스타일별 카드 → 후리기 → 비교표 → 연습법. 600px 이하에서 한 줄로 쌓는다. */
+:root{color-scheme:light dark;--bg:light-dark(#f6f6f3,#131313);--panel:light-dark(#ffffff,#1d1d1d);--ink:light-dark(#151515,#eeeeea);--mute:light-dark(#5b5b56,#a5a59f);--line:light-dark(#deddd7,#34342f);--hot:#ff4a1c;--cob:light-dark(#2343d8,#8ea0ff);--chip:light-dark(#efeee9,#262624)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.7 "IBM Plex Sans KR",system-ui,sans-serif;overflow-x:clip;padding-bottom:84px}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.topbar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+.tb{max-width:1240px;margin:0 auto;display:flex;gap:14px;align-items:center;padding:8px max(5vw,16px)}
+.brand{font-family:"Black Han Sans","IBM Plex Sans KR",sans-serif;font-size:20px;color:var(--ink);text-decoration:none;white-space:nowrap;flex:none}
+.sbox{position:relative;flex:1 1 320px;max-width:460px}
+.sbox input{width:100%;min-height:44px;font:16px "IBM Plex Sans KR",sans-serif;border:1px solid var(--line);border-radius:12px;padding:0 40px 0 40px;background:var(--panel);color:var(--ink);-webkit-appearance:none;appearance:none}
+.sbox input::-webkit-search-cancel-button{display:none}
+.sbox input:focus{outline:2px solid var(--cob);outline-offset:1px}
+.mag{position:absolute;left:13px;top:13px;width:18px;height:18px;color:var(--mute);pointer-events:none}
+.qclear{position:absolute;right:4px;top:2px;width:40px;height:40px;border:0;background:none;color:var(--mute);font-size:22px;cursor:pointer;border-radius:10px}
+.sbox input:placeholder-shown~.qclear{display:none}
+.res{position:absolute;top:calc(100% + 6px);left:0;width:min(560px,calc(100vw - 32px));background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -16px rgba(0,0,0,.35);max-height:min(65vh,560px);overflow:auto;overscroll-behavior:contain;z-index:50}
+.res .hint{padding:14px 16px;font-size:14.5px;color:var(--mute)}
+.res .hint .chips{margin-top:10px}
+.res .rc{padding:8px 16px 4px;font-size:12.5px;color:var(--mute)}
+.ri{display:flex;gap:10px;align-items:flex-start;padding:10px 12px 10px 16px;border-top:1px solid var(--line);cursor:pointer}
+.ri[aria-selected=true]{background:var(--chip)}
+.ri .rt{flex:1;min-width:0}.ri b{font-size:16px}.ri small{color:var(--mute);font-size:12.5px}
+.ri p{margin:3px 0 0;font-size:14px;color:var(--mute);line-height:1.5}
+mark{background:rgba(255,74,28,.22);color:inherit;border-radius:3px;padding:0 1px}
+.pl{flex:none;width:44px;height:44px;border-radius:10px;border:0;background:var(--hot);color:#fff;font-size:15px;cursor:pointer}
+.tbnav{display:flex;gap:2px;flex:1}
+.tbnav a{flex:none;padding:8px 9px;font-size:14px;color:var(--ink);text-decoration:none;border-radius:8px;white-space:nowrap}
+.tbnav a:hover{background:var(--chip)}
+@media(max-width:1239px){.tbnav{display:none}}@media(min-width:1240px){.sbox{max-width:360px}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips a,.chips button{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none;font:inherit;font-size:14px;cursor:pointer}
+.chips a small{color:var(--mute);font-size:12px}
+.chips a.gl{border-style:dashed}
+.rel{margin-top:18px;display:grid;gap:8px}.rel b{font-size:14px;color:var(--mute);font-weight:500}
+a.wl{color:inherit;text-decoration:underline;text-decoration-color:var(--cob);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a.wl:hover{color:var(--cob)}
+.refs{margin-top:18px}
+.glist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px;margin-top:18px}
+.gterm{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.gterm h3{font-size:22px;margin-bottom:6px}.gterm h3 small{font-family:"IBM Plex Sans KR";font-size:14px;color:var(--mute)}
+.gterm p{font-size:15.5px}.gterm .aka{font-size:13.5px;color:var(--mute);margin-bottom:6px}
+.ijump{display:flex;gap:4px;margin:6px 0 14px}.ijump a{flex:none;min-width:40px;min-height:40px;display:grid;place-items:center;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700}
+.ig{padding:12px 0;border-top:1px solid var(--line)}.ig h3{font-size:22px;margin-bottom:10px}
+.flash{animation:fl 1.8s ease-out}
+@keyframes fl{0%,25%{background:rgba(255,74,28,.16)}100%{background:transparent}}
+.style.flash,.gterm.flash{border-radius:12px}
+
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:"Black Han Sans","IBM Plex Sans KR",sans-serif;font-weight:400;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5vw,52px)}h2{font-size:clamp(28px,3.4vw,38px);margin-bottom:14px}h3{font-size:24px}
+p{margin:0 0 12px;max-width:68ch}
+a{color:var(--cob)}
+.lede{font-size:17px;color:var(--mute);max-width:62ch;margin-top:12px}
+pre,.scroll{overflow-x:auto}.scroll a{flex:none}code{overflow-wrap:anywhere}html{scroll-padding-top:84px;scroll-behavior:smooth}
+nav.toc{display:flex;gap:6px;flex-wrap:nowrap;margin-top:22px;padding-bottom:4px}
+nav.toc a{padding:9px 14px;border:1px solid var(--line);border-radius:99px;text-decoration:none;color:var(--ink);font-size:14.5px;background:var(--panel);white-space:nowrap}
+@media(min-width:1240px){nav.toc{display:none}}
+/* machine */
+.machine{background:#1e1e1d;color:#efede6;border-radius:18px;padding:clamp(14px,2.4vw,26px);margin-top:26px;box-shadow:0 1px 0 #3b3b38 inset,0 24px 50px -30px rgba(0,0,0,.6)}
+.tabs{display:flex;gap:6px;padding-bottom:10px}
+.tabs button{flex:none;font:inherit;font-size:15px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #3d3d3a;background:#2a2a28;color:#e6e3da;cursor:pointer}
+.tabs button.fill{border-style:dashed}
+.tabs button[aria-pressed=true]{background:var(--hot);border-color:var(--hot);color:#fff}
+.tabs .sep{flex:none;width:1px;background:#444;margin:6px 6px}
+.tabs .cat{flex:none;align-self:center;font-size:12.5px;color:#8b897f;white-space:nowrap;padding:0 2px}
+h3.grp{font-size:26px;margin:40px 0 0;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+h3.grp+.style{border-top:0}
+.info{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:end;margin:14px 0 16px}
+.info h3{font-size:clamp(26px,3vw,34px);color:#fff}
+.info .en{font-family:"IBM Plex Sans KR";font-size:15px;color:#a9a69c;margin-left:8px}
+.info p{color:#cfccc2;margin:6px 0 0;font-size:15.5px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.meta span{font-size:13.5px;border:1px solid #45453f;border-radius:99px;padding:3px 10px;color:#d8d5cb;white-space:nowrap}
+.gridbox{background:#151514;border-radius:12px;padding:12px 12px 8px}
+.bars{display:flex;gap:14px;width:max-content}
+.lab{position:sticky;left:0;z-index:2;background:#151514;display:flex;flex-direction:column;gap:4px;padding-right:8px}
+.lab div,.col div{height:26px}
+.lab .r{font-size:13px;color:#cbc8bf;display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer;width:108px;border-radius:6px;padding:0 6px;user-select:none}
+.lab .r:hover{background:#262624}
+.lab .r.m{color:#6d6b65;text-decoration:line-through}
+.lab .r i{font-style:normal;font-size:11px;color:#77756d}
+.lab .h,.col .h{font-size:12px;color:#8b897f;display:flex;align-items:center}
+.bar{display:flex;gap:3px}
+.col{display:flex;flex-direction:column;gap:4px;width:24px}
+.col.beat{margin-left:6px}
+.col .h{justify-content:center}
+.col .h.b{color:#efede6;font-weight:700}
+.col .st{font-size:12px;justify-content:center;display:flex;align-items:center;color:var(--hot);font-weight:700}
+.c{border-radius:5px;background:#2e2e2c;border:0;padding:0;cursor:pointer;position:relative;display:block;width:24px;height:26px;flex:none;font:700 11px/26px "IBM Plex Sans KR";color:#fff}
+.col.beat .c{background:#363633}
+.col .c.on{background:var(--hot)}
+.col .c.acc{background:#ff7a50;box-shadow:0 0 0 2px #ffd2c2 inset}
+.col .c.gh{background:#7a3424}
+.col .c.roll{background:var(--hot)}
+.col.now .c{outline:2px solid #fff;outline-offset:-1px}
+.col.now .c.on,.col.now .c.acc,.col.now .c.roll{filter:brightness(1.35)}
+.c:focus-visible{outline:2px solid #8ea0ff}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:16px}
+.play{min-height:52px;min-width:120px;border-radius:12px;border:0;background:var(--hot);color:#fff;font:700 17px "IBM Plex Sans KR";cursor:pointer;padding:0 18px}
+.play.on{background:#efede6;color:#1e1e1d}
+.knob{display:flex;align-items:center;gap:10px;font-size:14px;color:#cfccc2}
+.knob input[type=range]{width:160px;accent-color:var(--hot);height:32px}
+.knob output{font-variant-numeric:tabular-nums;min-width:58px;color:#fff;font-weight:700;white-space:nowrap}
+.ghost{min-height:44px;border-radius:10px;border:1px solid #4a4a45;background:transparent;color:#e6e3da;font:inherit;font-size:14.5px;padding:0 14px;cursor:pointer}
+.legend{font-size:13px;color:#a9a69c;margin-top:12px;display:flex;flex-wrap:wrap;gap:4px 16px}
+.legend b{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.ios{font-size:13px;color:#8b897f;margin-top:6px}
+.swhint{font-size:14px;color:#ffb39c;margin:10px 0 0;min-height:1.6em;max-width:90ch}.swhint:empty{display:none}
+.col .c{transition:transform .15s,width .15s}.gridbox.sw .c{width:18px;margin-left:3px}.c{box-shadow:0 0 0 1px #151514}
+@media(prefers-reduced-motion:reduce){.col .c{transition:none}}
+.unit{display:inline-flex;border:1px solid #4a4a45;border-radius:9px;overflow:hidden}.unit button{min-height:36px;min-width:46px;border:0;background:transparent;color:#cfccc2;font:inherit;font-size:13px;cursor:pointer}.unit button[aria-pressed=true]{background:#efede6;color:#1e1e1d;font-weight:700}
+#roomOut{min-width:96px}#humanOut{min-width:84px}
+.chk{gap:8px;cursor:pointer}.chk input{width:20px;height:20px;accent-color:var(--hot)}
+.samp{margin-top:14px;border-top:1px solid #34342f;padding-top:12px}
+.samp summary{cursor:pointer;font-weight:700;min-height:48px;display:inline-flex;align-items:center;gap:10px;color:#efede6;border:1px solid #5a5a54;border-radius:10px;padding:0 16px;background:#2a2a28;list-style:none}
+.samp summary::-webkit-details-marker{display:none}
+.samp summary::before{content:'▸';color:var(--hot)}.samp[open] summary::before{content:'▾'}
+.samp summary small{font-weight:400;color:#a9a69c}
+.samp ol{font-size:14px;color:#cfccc2;padding-left:20px;margin:12px 0;max-width:80ch}.samp ol li{margin-bottom:4px}.samp code{background:#2e2e2c;padding:1px 6px;border-radius:4px;color:#efede6}
+.samp p{font-size:14px;color:#bdbab0;max-width:80ch}
+.sbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:6px 0 12px}
+.filebtn{display:inline-flex;align-items:center;cursor:pointer}
+.smsg{font-size:13.5px;color:#d8d5cb}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:6px 18px}
+.srow{display:flex;align-items:center;gap:8px;font-size:13.5px;border-bottom:1px solid #2c2c29;padding:4px 0}
+.srow .sn{width:84px;flex:none;color:#efede6}.srow .sf{flex:1;color:#a9a69c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.srow i{font-style:normal;color:#77756d}
+.ghost.sm{min-height:36px;padding:0 10px;font-size:13px}
+/* content */
+.read{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.card h3{margin-bottom:8px}
+.count{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0}
+.count span{width:34px;height:34px;display:grid;place-items:center;border-radius:7px;background:var(--chip);font-weight:700;font-size:14px}
+.count span.b{background:var(--ink);color:var(--bg)}
+.style{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px 40px;padding:34px 0;border-top:1px solid var(--line)}
+.style .head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.style .head small{color:var(--mute);font-size:15px}
+.style .one{font-size:18px;font-weight:500;margin-bottom:14px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;font-size:15px;margin:0}
+.facts dt{color:var(--mute);white-space:nowrap}
+.facts dd{margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{background:var(--chip);border-radius:99px;padding:2px 10px;font-size:14px}
+.tips{margin:14px 0 0;padding-left:20px;font-size:15.5px}
+.tips li{margin-bottom:6px}
+.note{border-left:3px solid var(--cob);padding:8px 14px;margin:14px 0;font-size:15px;background:var(--panel);border-radius:0 8px 8px 0}
+.btn{min-height:44px;border-radius:10px;border:0;background:var(--ink);color:var(--bg);font:700 15px "IBM Plex Sans KR";padding:0 18px;cursor:pointer;margin:16px 0 14px}
+.refs{display:flex;flex-direction:column;gap:6px;font-size:15px}
+.refs a{text-decoration:none}.refs a:hover{text-decoration:underline}
+.refs small{color:var(--mute)}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--panel);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;background:var(--chip)}
+td.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+ol.steps{padding-left:22px;max-width:70ch}ol.steps li{margin-bottom:10px}
+.mini{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:#1e1e1d;color:#efede6;border-radius:99px;padding:6px 8px 6px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);z-index:10;max-width:calc(100% - 24px);font-size:15px}
+.mini[hidden]{display:none}
+.mini span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini button{min-height:44px;border-radius:99px;border:0;background:var(--hot);color:#fff;font:700 15px "IBM Plex Sans KR";padding:0 18px;cursor:pointer;flex:none}
+footer{color:var(--mute);font-size:14px}
+@media(max-width:760px){.style{grid-template-columns:minmax(0,1fr)}.info{grid-template-columns:minmax(0,1fr)}.meta{justify-content:flex-start}}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 12px;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute)}.stack td:empty{display:none}.knob input[type=range]{width:120px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.col.now .c{filter:none}}
+.pickw{display:none}
+@media(max-width:700px){
+  .tabs{display:none}
+  .pickw{display:grid;gap:6px;font-size:13px;color:#a9a69c}
+  .pick{width:100%;min-height:48px;font:16px "IBM Plex Sans KR",sans-serif;border-radius:10px;background:#2a2a28;color:#fff;border:1px solid #4a4a45;padding:0 12px}
+}
+@media(max-width:600px){
+  .brand{display:none}
+  .tb{padding:8px 12px}
+  .sbox{max-width:none}
+  .res{position:fixed;left:8px;right:8px;width:auto;top:62px;max-height:calc(100vh - 140px)}
+  .machine{border-radius:14px;margin-left:-6px;margin-right:-6px}
+  .gridbox{padding:8px 6px 6px}
+  .lab .r{width:74px;font-size:12px;padding:0 4px}
+  .lab .r i{display:none}
+  .ctrl{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+  .play{width:100%}
+  .knob{display:grid;grid-template-columns:4.6em minmax(0,1fr) auto;align-items:center}
+  .knob input[type=range]{width:100%}
+  #swingWrap{grid-template-columns:4.6em minmax(0,1fr) auto}
+  #swingWrap .unit{grid-column:1/-1;justify-self:start}
+  .legend{font-size:12.5px}
+  .style{padding:26px 0}
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .facts dt{margin-top:6px;font-size:13px}
+  .mini{bottom:10px;font-size:14px}
+  h2{font-size:28px}
+}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<div class="topbar" id="topbar"><div class="tb">
+<a class="brand" href="#top">드럼 비트</a>
+<div class="sbox" role="search">
+<svg class="mag" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+<input type="search" id="q" placeholder="스타일·주법·용어 검색 (예: 보스, 재즈, ㅂㅅㄴㅂ)" autocomplete="off" spellcheck="false" aria-label="검색" aria-controls="res" aria-expanded="false" role="combobox">
+<button type="button" id="qclear" class="qclear" aria-label="검색어 지우기">×</button>
+<div class="res" id="res" role="listbox" hidden></div>
+</div>
+<nav class="tbnav scroll" aria-label="목차"><a href="#how">그리드 읽는 법</a><a href="#styles">스타일</a><a href="#techs">주법 사전</a><a href="#fills">후리기</a><a href="#compare">비교표</a><a href="#glossary">용어 사전</a><a href="#index">전체 색인</a><a href="#practice">연습 방법</a></nav>
+</div></div>
+<header class="band" id="top">
+<div class="wrap">
+<h1>드럼 비트 학습자료</h1>
+<p class="lede">엠나인아카데미 게임음악작곡 과정 실습용 자료입니다. 장르마다 드럼이 어디를 치는지 직접 듣고, 칸을 눌러 바꿔 보면서 익혀 보세요. 재생 버튼을 누르면 브라우저에서 바로 소리가 납니다. 갖고 있는 드럼 샘플을 불러와서 들을 수도 있어요(<a href="#samp" id="sampLink">시퀀서 아래 "내 드럼 샘플로 바꾸기"</a>).</p>
+<nav class="toc scroll" aria-label="목차">
+<a href="#player">시퀀서</a><a href="#how">그리드 읽는 법</a><a href="#styles">스타일</a><a href="#techs">주법 사전</a><a href="#fills">후리기</a><a href="#compare">비교표</a><a href="#glossary">용어 사전</a><a href="#index">전체 색인</a><a href="#practice">연습 방법</a>
+</nav>
+
+<section class="machine" id="player" aria-label="드럼 시퀀서">
+<label class="pickw"><span>스타일 고르기</span><select id="pick" class="pick"></select></label>
+<div class="tabs scroll" id="tabs" role="toolbar" aria-label="스타일 선택"></div>
+<div class="info">
+<div><h3 id="iName"></h3><p id="iLead"></p></div>
+<div class="meta" id="iMeta"></div>
+</div>
+<div class="gridbox scroll" id="gridbox"></div>
+<div class="ctrl">
+<button class="play" id="play" type="button">▶ 재생</button>
+<label class="knob">템포 <input type="range" id="bpm" min="50" max="200" step="1"><output id="bpmOut"></output></label>
+<span class="knob" id="swingWrap"><label for="swing">스윙</label> <input type="range" id="swing" min="50" max="75" step="1" value="50"><output id="swingOut">50%</output><span class="unit" role="group" aria-label="스윙 기준 음표"><button type="button" data-u="8">8분</button><button type="button" data-u="16">16분</button></span></span>
+<label class="knob">공간감 <input type="range" id="room" min="0" max="100" step="1" value="35"><output id="roomOut">35</output></label>
+<label class="knob">사람처럼 치기 <input type="range" id="human" min="0" max="100" step="1" value="0"><output id="humanOut">끔 (기계)</output></label>
+<button class="ghost" id="reset" type="button">원래 패턴으로</button>
+</div>
+<p class="swhint" id="swHint" aria-live="polite"></p>
+<details class="samp" id="samp">
+<summary>내 드럼 샘플로 바꾸기 <small>wav·mp3 불러오기</small></summary>
+<ol>
+<li><b>여러 개를 한꺼번에:</b> "여러 파일 한꺼번에 불러오기"를 누르고 샘플 파일을 여러 개 고르세요. 파일 이름에 <code>kick</code> <code>snare</code> <code>hat</code> <code>open</code> <code>ride</code> <code>crash</code> <code>tom1</code> <code>floor</code> <code>clap</code> <code>rim</code> 같은 단어가 있으면 알맞은 악기 자리에 자동으로 들어갑니다. 자리를 못 찾은 파일은 이름을 알려 드려요.</li>
+<li><b>악기 하나씩:</b> 아래 목록에서 바꾸고 싶은 악기 줄의 "파일" 버튼을 눌러 샘플 하나를 고르세요. 파일 이름과 상관없이 그 악기에 들어갑니다.</li>
+<li><b>재생:</b> 위에서 재생하면 샘플을 넣은 악기는 샘플로, 나머지는 합성 소리로 나옵니다. 칸의 세기(악센트·보통·고스트)는 샘플 볼륨으로 반영돼요.</li>
+</ol>
+<p>파일은 이 브라우저 안에서만 쓰이고 어디에도 올라가지 않습니다. 새로고침하면 다시 합성 소리로 돌아가요. 한 번 치는 원샷 샘플(한 타격만 들어 있는 짧은 파일)을 쓰세요. 루프 파일을 넣으면 칸마다 루프 전체가 재생됩니다.</p>
+<div class="sbar"><label class="ghost filebtn">여러 파일 한꺼번에 불러오기<input type="file" id="multi" accept="audio/*" multiple hidden></label><button class="ghost" type="button" id="sclear">샘플 모두 지우기</button><span id="smsg" class="smsg"></span></div>
+<div class="slist" id="slist"></div>
+</details>
+<div class="legend">
+<span><b style="background:#ff7a50;box-shadow:0 0 0 2px #ffd2c2 inset"></b>악센트(세게)</span>
+<span><b style="background:var(--hot)"></b>보통</span>
+<span><b style="background:#7a3424"></b>고스트(아주 약하게)</span>
+<span>2·3 = 한 칸에 두 번·세 번(롤)</span><span>f 플램 · d 드래그 · z 버즈 롤</span>
+<span>칸 클릭: 보통 → 악센트 → 고스트 → 끄기</span>
+<span>악기 이름 클릭: 음소거</span>
+</div>
+<p class="ios">소리는 브라우저에서 합성한 드럼입니다. 공간감은 방 크기와 울림의 양을 함께 바꿉니다(손을 떼면 방 크기가 바뀌어요). 스윙은 패턴에 맞춰 8분 또는 16분 기준이 자동으로 골라지고, 직접 바꿀 수도 있어요. "사람처럼 치기"를 올리면 타이밍과 세기가 흔들리고, 하이햇은 정박이 세고 엇박이 약해지며, 스네어 백비트는 아주 살짝 늦게 들어갑니다(전자 악기는 제외). 0이면 모든 음이 똑같은 세기와 정확한 타이밍으로 나와요. 아이폰에서 소리가 안 나면 무음 모드를 꺼 주세요. 스페이스바로도 재생·정지할 수 있어요.</p>
+</section>
+</div>
+</header>
+
+<section class="band" id="how">
+<div class="wrap">
+<h2>그리드 읽는 법</h2>
+<p>시퀀서의 한 칸은 박을 잘게 나눈 한 조각입니다. 굵은 숫자가 있는 칸이 박의 시작이고, 4박이 모이면 한 마디가 돼요. 스타일마다 한 박을 몇 칸으로 나누는지가 다릅니다. 그래서 DAW에서 찍을 때도 그리드 설정을 먼저 맞춰야 해요.</p>
+<div class="read">
+<div class="card"><h3>한 박 = 4칸 (16분음표)</h3>
+<div class="count"><span class="b">1</span><span>e</span><span>&amp;</span><span>a</span><span class="b">2</span><span>e</span><span>&amp;</span><span>a</span></div>
+<p>"원 이 앤 아"로 셉니다. 8비트, 16비트, 디스코, 하우스, 트랩, 붐뱁, 보사노바, 삼바처럼 대부분의 스타일이 이 그리드를 씁니다. DAW 그리드는 1/16로 두세요.</p></div>
+<div class="card"><h3>한 박 = 3칸 (셋잇단)</h3>
+<div class="count"><span class="b">1</span><span>·</span><span>·</span><span class="b">2</span><span>·</span><span>·</span></div>
+<p>셔플, 12/8 발라드, 스윙, 원드롭, 셋잇단 후리기가 여기에 해당합니다. 박마다 "따다다"로 세면 편해요. DAW 그리드는 1/8T(8분 셋잇단)입니다. 12/8 발라드는 DAW 박자를 12/8로 두고 1/8 그리드로 찍어도 됩니다.</p></div>
+<div class="card"><h3>한 마디가 4박이 아닐 때</h3>
+<div class="count"><span class="b">1</span><span>&amp;</span><span class="b">2</span><span>&amp;</span><span class="b">3</span><span>&amp;</span></div>
+<p>왈츠는 한 마디가 3박이고, 칸 하나가 8분음표입니다. 6/8은 8분음표 여섯 개를 셋씩 묶어 큰 박 두 개로 세요. 5/4는 3+2로, 7/8은 2+2+3으로 묶어 셉니다. 모두 DAW 박자부터 바꾸고 시작하세요.</p></div>
+</div>
+</div>
+</section>
+
+<section class="band" id="styles" style="padding-top:0">
+<div class="wrap">
+<h2>스타일별 설명</h2>
+<p>각 스타일에서 "시퀀서에서 듣기"를 누르면 위 시퀀서에 패턴이 올라가고 바로 재생됩니다. 레퍼런스 링크는 유튜브 검색 결과로 연결되니까, 실제 곡이나 연주 영상을 골라 들어 보세요.</p>
+<div id="styleList"></div>
+</div>
+</section>
+
+<section class="band" id="techs" style="padding-top:0">
+<div class="wrap">
+<h2>주법 사전</h2>
+<p>같은 리듬이라도 어떻게 치느냐에 따라 소리가 달라집니다. 여기 있는 주법은 앞의 스타일 예시 곳곳에 쓰였어요. 하나씩 들어 보고, 스타일 패턴에 직접 적용해 보세요. 예시는 대부분 첫 마디가 기본, 다음 마디가 주법을 적용한 버전입니다.</p>
+<div id="techList"></div>
+</div>
+</section>
+
+<section class="band" id="fills" style="padding-top:0">
+<div class="wrap">
+<h2>후리기(필인)</h2>
+<p>필인을 현장에서는 "후리기"라고 많이 부릅니다. 리듬을 치다가 마디 끝에서 드럼을 몰아친 뒤 다음 구간 첫 박에 크래시를 치는 연주예요. 게임음악에서는 루프가 다시 처음으로 돌아갈 때, 전투가 다음 페이즈로 넘어갈 때 후리기가 자연스러운 이음새 역할을 합니다.</p>
+<p>아래 예시는 모두 2마디입니다. 첫 마디는 기본 리듬, 둘째 마디가 후리기예요. 시퀀서 위쪽 빨간 글자는 스틱킹입니다. R은 오른손, L은 왼손을 뜻해요.</p>
+
+<div id="fillList"></div>
+</div>
+</section>
+
+<section class="band" id="compare" style="padding-top:0">
+<div class="wrap">
+<h2>한눈에 비교</h2>
+<p>킥과 스네어 위치만 봐도 스타일이 대부분 구분됩니다. 곡을 듣다가 장르가 헷갈리면 킥이 정박마다 있는지, 스네어가 2·4박인지 3박인지부터 확인해 보세요.</p>
+<div class="scroll"><table class="stack" id="cmp"><thead><tr><th>분류</th><th>스타일</th><th>예시 BPM</th><th>킥</th><th>스네어·클랩</th><th>느낌</th><th>게임 장면 예시</th></tr></thead><tbody></tbody></table></div>
+</div>
+</section>
+
+<section class="band" id="glossary" style="padding-top:0">
+<div class="wrap">
+<h2>용어 사전</h2>
+<p>문서에 나오는 드럼·리듬 용어를 모았습니다. 본문에서 밑줄 친 단어를 누르면 해당 용어나 문서로 이동해요. 이동한 뒤에는 브라우저의 뒤로 가기로 원래 자리로 돌아올 수 있습니다.</p>
+<div class="glist" id="glossList"></div>
+</div>
+</section>
+
+<section class="band" id="index" style="padding-top:0">
+<div class="wrap">
+<h2>전체 색인</h2>
+<p id="idxCount"></p>
+<nav class="ijump scroll" id="idxJump" aria-label="색인 첫 글자"></nav>
+<div id="idxList"></div>
+</div>
+</section>
+
+<section class="band" id="practice" style="padding-top:0">
+<div class="wrap">
+<h2>연습 방법</h2>
+<ol class="steps">
+<li><b>먼저 듣고 셉니다.</b> 패턴을 재생해 두고 소리 내서 카운트를 세 보세요. 킥과 스네어가 몇 번째 칸에 들어가는지 입으로 말할 수 있으면 반은 익힌 겁니다.</li>
+<li><b>악기를 하나씩 끄고 들어 봅니다.</b> 악기 이름을 눌러 음소거하면 그 악기가 리듬에서 맡은 역할이 들립니다. 디스코의 오픈 하이햇, 드럼앤베이스의 고스트 스네어처럼 빠지면 느낌이 확 달라지는 악기를 찾아보세요.</li>
+<li><b>DAW에 그대로 찍습니다.</b> 그리드 설정(1/16, 1/8T, 1/16T)을 맞추고 시퀀서와 똑같이 입력하세요. 그다음 벨로시티를 악센트, 보통, 고스트 세 단계로 나눠 주면 기계 느낌이 줄어듭니다.</li>
+<li><b>한 칸만 바꿔 봅니다.</b> 킥이나 스네어 하나를 옆 칸으로 옮기고 차이를 들어 보세요. 리듬을 바꾸는 감각은 이렇게 작은 변화를 많이 들어 봐야 생깁니다.</li>
+<li><b>게임 장면을 정하고 8마디를 만듭니다.</b> 예를 들어 "해변 스테이지는 소카", "재즈 바는 스윙", "보스 2페이즈는 하프타임에서 블라스트 비트로"처럼 장면을 먼저 정하세요. 7마디는 리듬, 8마디째는 후리기로 마무리하면 루프가 자연스럽게 다시 돌아갑니다.</li>
+</ol>
+<p>여기 있는 패턴은 각 스타일의 기본 뼈대입니다. 실제 곡의 드럼은 훨씬 다양하니까, 레퍼런스 곡을 들으면서 드럼만 따로 받아 적는 연습을 꼭 같이 해 보세요.</p>
+</div>
+</section>
+
+<footer class="band" style="padding-top:0"><div class="wrap">엠나인아카데미 게임음악작곡 과정 · 드럼 비트 학습자료</div></footer>
+
+<div class="mini" id="mini" hidden><span id="miniTxt"></span><button type="button" id="miniStop">■ 정지</button></div>
+
+<script>
+{
+const at=(n,s)=>{const a=Array(n).fill('.');s.split(' ').filter(Boolean).forEach(p=>{const[i,c]=p.split(':');a[+i]=c});return a.join('')};
+const yt=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const ROWS=[['crash','크래시'],['choke','크래시 초크'],['splash','스플래시'],['china','차이나'],['ride','라이드'],['bell','라이드 벨'],['ohat','오픈 하이햇'],['hhalf','하프 오픈'],['hat','하이햇'],['hpedal','하이햇 페달'],['chipH','칩 햇'],['tamb','탬버린'],['cowbell','카우벨'],['block','우드블록'],['shaker','쉐이커'],['clap','클랩'],['rshot','림샷'],['gsnare','게이트 스네어'],['snare','스네어'],['chipS','칩 스네어'],['rim','림'],['tomH','하이 탐'],['tomM','미드 탐'],['tomL','플로어 탐'],['taiko','큰북'],['ekick','킥(전자)'],['hkick','하드 킥'],['kick','킥'],['chipK','칩 킥'],['b808','808']];
+const CATS=['기본','3박·홀수박','펑크·소울·컨트리','댄스·전자','브레이크·베이스','하드 일렉트로닉','힙합','월드·라틴','록·메탈','게임·영상'];
+const G8={res:4,t:{crash:'X...............',hat:'..x.X.x.X.x.X.x.',snare:'....X.......X...',kick:'x.......x.x.....'}};
+const STY=[
+{id:'eight',cat:'기본',name:'8비트',en:'8 Beat',bpm:100,range:'약 70~160',grid:'1/16 (하이햇은 8분)',kick:'1·3박(+3박 엇박)',sn:'2·4박',feel:'스트레이트',
+mood:['단단함','직진','친숙함'],genres:['록','팝록','펑크록','J-록·애니송'],games:['필드 BGM의 록 편곡','레이싱 메뉴 화면','캐주얼 게임 타이틀'],
+one:'하이햇이 8분음표로 쭉 가고, 킥은 1·3박, 스네어는 2·4박을 칩니다. 드럼 비트를 배울 때 가장 먼저 익히는 리듬이에요.',
+body:['2·4박에 들어가는 스네어를 백비트라고 부릅니다. 대중음악 대부분이 백비트 위에서 움직이기 때문에, 8비트가 몸에 붙어 있어야 다른 리듬과 비교하면서 들을 수 있어요.','예시 패턴에는 3박 엇박(3 &)에 킥을 하나 더 넣었습니다. 킥 하나만 옮겨도 느낌이 꽤 바뀌니까 시퀀서에서 킥 위치를 직접 바꿔 보세요.'],
+tips:['하이햇은 정박(1·2·3·4)을 조금 세게, 엇박을 약하게 치면 덜 기계적으로 들립니다.','템포를 150 근처까지 올리면 펑크록 느낌이 나요.'],
+note:'칩튠을 "8비트 음악"이라고도 부르는데, 여기서 말하는 8비트는 8분음표로 치는 드럼 비트입니다. 이름만 같고 다른 개념이에요.',
+refs:[['8 beat drum groove lesson','8비트 기본 리듬 레슨 영상'],['AC/DC Back in Black','AC/DC – Back in Black']],
+bars:[{res:4,t:{hat:'X.x.X.x.X.x.X.x.',snare:'....X.......X...',kick:'x.......x.x.....'}}]},
+{id:'sixteen',cat:'기본',name:'16비트',en:'16 Beat',bpm:96,range:'약 80~120',grid:'1/16',kick:'싱코페이션(엇박 자주)',sn:'2·4박 + 고스트',feel:'스트레이트, 촘촘함',
+mood:['경쾌함','세련됨','그루브'],genres:['펑크(Funk)','시티팝','R&B','퓨전'],games:['도시 탐색','상점·쇼핑 UI','레트로 감성 퍼즐'],
+one:'하이햇을 16분음표로 쪼개서 칩니다. 같은 템포여도 8비트보다 촘촘하고 그루브가 살아나요.',
+body:['16비트에서는 킥과 스네어가 16분 엇박(e, a)에 자주 들어갑니다. 예시에서 스네어 줄의 어두운 칸은 고스트 노트예요. 아주 작게 쳐서 들릴 듯 말 듯하게 리듬을 채우는 음입니다.','템포가 빨라서 한 손으로 16분을 치기 어려우면 드러머는 양손 교대로 하이햇을 칩니다. 미디로 찍을 때도 정박과 엇박의 벨로시티 차이를 꼭 주세요. 모두 같은 세기면 기계 소리처럼 들립니다.'],
+tips:['스윙을 54~58% 정도로 살짝 주면 16비트가 덜 딱딱해집니다.','고스트 노트를 음소거해 보고, 다시 켰을 때 무엇이 달라지는지 들어 보세요.'],
+refs:[['16 beat drum groove lesson','16비트 그루브 레슨 영상'],['funk drum groove ghost notes','펑크 드럼 고스트 노트 영상']],
+bars:[{res:4,t:{hat:'XgxgXgxgXgxgXgxg',snare:'....X..g.g..X..g',kick:'x..x....x.x..x..'}}]},
+{id:'shuffle',cat:'기본',name:'셔플',en:'Shuffle',bpm:90,range:'약 70~140',grid:'1/8T (셋잇단)',kick:'1·3박 근처',sn:'2·4박',feel:'출렁임(셋잇단)',
+mood:['흥겨움','여유','장난스러움'],genres:['블루스','셔플 록','스윙','컨트리'],games:['서부극 술집','카지노·도박장','코믹한 마을 NPC 테마'],
+one:'한 박을 셋으로 나눈 뒤 첫째와 셋째 칸만 칩니다. "따-안따-안" 하고 말을 타는 듯이 출렁이는 느낌이 나요.',
+body:['그리드가 한 박에 3칸인 것에 주의하세요. 8비트와 박 수는 같지만 엇박이 조금 뒤로 밀려 있습니다. DAW에서 스윙 값을 올려서 만들 수도 있는데, 셔플은 처음부터 셋잇단 기준으로 생각하는 편이 정확해요.','스네어를 3박에 한 번만 치는 하프타임 셔플도 있습니다. 토토(Toto)의 "Rosanna"가 대표적인 예라서 링크로 같이 들어 보세요.'],
+tips:['8비트 패턴을 재생하고 스윙을 66%로 올려 보세요. 셔플과 거의 같은 느낌이 납니다.'],
+refs:[['shuffle drum beat lesson','셔플 리듬 레슨 영상'],['Toto Rosanna drums','Toto – Rosanna (하프타임 셔플)']],
+bars:[{res:3,t:{hat:'x.xx.xx.xx.x',snare:'...X.....X..',kick:'x.....x....x'}}]},
+{id:'half',cat:'기본',name:'하프타임',en:'Half-time',bpm:140,range:'표기 120~160 (체감은 절반)',grid:'1/16',kick:'자유롭게, 듬성듬성',sn:'3박 한 번',feel:'느리고 무거움',
+mood:['무게감','긴장','웅장함'],genres:['시네마틱 트레일러','덥스텝','메탈코어 브레이크다운','트랩'],games:['보스 등장 컷신','거대 몬스터 걷기','잠입 구간'],
+one:'스네어를 2·4박이 아니라 3박에 한 번만 칩니다. 템포는 그대로인데 곡이 절반 속도로 느려진 것처럼 들려요.',
+body:['BPM 140 곡에서 8비트를 치다가 하프타임으로 바꾸면 갑자기 무게가 실립니다. 템포를 바꾸지 않고 분위기만 무겁게 만들 수 있어서 게임음악에서 자주 쓰는 방법이에요. 전투 BGM 중간에 보스가 강해지는 구간을 만들 때 써 보세요.','하이햇은 8분이나 16분을 그대로 두는 경우가 많습니다. 하이햇까지 느려지면 곡 전체가 처지니까 위쪽 리듬은 살려 두세요.'],
+tips:['같은 BPM에서 8비트 → 하프타임 순서로 번갈아 들어 보세요. 템포는 같은데 체감 속도가 다릅니다.'],
+refs:[['half time drum groove','하프타임 그루브 영상'],['epic trailer drums half time','트레일러 음악 드럼 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'........X.......',kick:'x.....x......x..'}}]},
+{id:'disco',cat:'댄스·전자',name:'디스코',en:'Disco',bpm:120,range:'약 100~130',grid:'1/16',kick:'매 박 (4 온 더 플로어)',sn:'2·4박',feel:'스트레이트, 춤추기 좋음',
+mood:['신남','화려함','레트로'],genres:['디스코','하우스','누디스코','신스팝 댄스'],games:['리듬 게임','클럽·파티 맵','레트로 도시 야경','상점 BGM'],
+one:'킥이 매 박마다 쿵쿵쿵쿵 들어갑니다. 이 킥을 "4 온 더 플로어"라고 불러요. 엇박에서 오픈 하이햇이 "치-" 하고 열리는 소리가 디스코의 특징입니다.',
+body:['킥이 모든 정박을 채우기 때문에 스네어나 클랩은 2·4박만 쳐도 충분합니다. 리듬을 앞으로 끌고 가는 역할은 엇박 오픈 하이햇이 맡아요. 오픈 하이햇을 음소거해 보면 차이가 바로 들립니다.','하우스는 디스코의 4 온 더 플로어를 그대로 이어받은 장르입니다. 템포를 124 정도로 올리고 스네어 자리에 클랩을 쓰면 하우스에 가까워져요.'],
+tips:['쉐이커를 16분으로 깔면 디스코 특유의 반짝이는 느낌이 납니다. 쉐이커를 끄고 켜면서 비교해 보세요.'],
+refs:[['Bee Gees Stayin Alive','Bee Gees – Stayin\' Alive'],['Chic Le Freak','Chic – Le Freak'],['disco drum beat lesson','디스코 드럼 레슨 영상']],
+bars:[{res:4,t:{ohat:'..x...x...x...x.',hat:'x...x...x...x...',shaker:'xgxgxgxgxgxgxgxg',snare:'....X.......X...',kick:'x...x...x...x...'}}]},
+{id:'trap',cat:'힙합',name:'트랩',en:'Trap',bpm:140,range:'표기 약 130~170 (하프타임 느낌)',grid:'1/16 + 롤(1/32, 셋잇단)',kick:'808이 킥과 베이스를 겸함',sn:'3박 (하프타임)',feel:'느린 몸통, 빠른 하이햇',
+mood:['어둡고 묵직함','도시적','공격적'],genres:['트랩','힙합','드릴','트랩 EDM'],games:['현대 도시 액션','스트리트 레이싱','범죄·갱 테마','캐릭터 소개 영상'],
+one:'클랩(또는 스네어)이 3박에 들어가는 하프타임 리듬 위에, 하이햇을 잘게 굴리는 롤과 길게 울리는 808 베이스가 올라갑니다.',
+body:['트랩 하이햇은 8분으로 가다가 중간중간 32분이나 그보다 빠른 롤로 바뀝니다. 시퀀서에서 "2"는 한 칸 안에 두 번, "3"은 세 번 치는 칸이에요. 롤 위치를 바꿔 가며 들어 보세요.','808은 킥이면서 베이스 역할도 합니다. 음정이 있어서 곡의 코드와 맞춰야 해요. 예시의 "h" 칸은 음을 높여서 친 808입니다.','트랩은 2000년대 미국 남부, 특히 애틀랜타 힙합에서 자리 잡은 스타일로 알려져 있습니다.'],
+tips:['롤을 한 마디에 다 넣으면 정신없어집니다. 마디 끝이나 클랩 직전처럼 위치를 정해서 넣어 보세요.','BPM 140이지만 클랩이 3박에 있어서 70 BPM처럼 느껴집니다. 템포를 숫자가 아니라 체감으로 확인하세요.'],
+refs:[['trap drum pattern hi hat rolls tutorial','트랩 하이햇 롤 튜토리얼'],['808 bass glide trap tutorial','808 베이스 글라이드 튜토리얼']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.2222',clap:'........X.......',b808:'x.........x..x..'}},{res:4,t:{hat:'x.x.x.x.3.x.x3x3',clap:'........X.......',b808:'x..x......h.....'}}]},
+{id:'soca',cat:'월드·라틴',name:'소카',en:'Soca',bpm:128,range:'그루비 소카 약 110~130 / 파워 소카 약 135~160 (자료마다 차이 있음)',grid:'1/16',kick:'매 박 (4 온 더 플로어)',sn:'엇박에서 튐',feel:'통통 튀고 들썩임',
+mood:['축제','햇살','들썩임'],genres:['소카','칼립소','카리브 카니발 음악','아프로 계열 댄스'],games:['해변·열대 섬 스테이지','축제 이벤트 맵','여름 시즌 이벤트','미니게임'],
+one:'트리니다드 토바고의 카니발 음악입니다. 킥은 4 온 더 플로어로 쭉 가고, 스네어가 엇박에서 통통 튀면서 카우벨과 쉐이커 같은 퍼커션이 리듬을 채워요.',
+body:['1970년대 트리니다드 토바고의 가수 로드 쇼티(Lord Shorty)가 칼립소에 인도 음악의 리듬을 섞으면서 소카가 시작됐다고 알려져 있습니다. 느긋하게 몸을 흔드는 그루비 소카와 빠르게 뛰는 파워 소카로 나눠 부르기도 해요.','소카의 스네어 패턴은 곡과 프로듀서마다 많이 다릅니다. 여기 예시는 "4 온 더 플로어 킥 + 엇박 스네어 + 퍼커션"이라는 기본 구조를 들려 드리려고 만든 패턴이에요. 실제 곡 몇 개를 들으면서 스네어 위치를 직접 받아 적어 보세요.'],
+tips:['카우벨과 쉐이커를 끄면 디스코와 비슷해집니다. 소카다운 느낌이 어디서 오는지 비교해 보세요.','템포를 150 근처로 올리면 파워 소카 쪽 에너지가 납니다.'],
+note:'소카의 BPM 범위는 찾아본 자료마다 달랐습니다. 위 범위는 대략적인 기준으로만 보시고, 레퍼런스 곡의 BPM을 직접 재 보세요.',
+refs:[['Machel Montano soca','Machel Montano (소카 대표 아티스트)'],['power soca mix','파워 소카 검색'],['groovy soca mix','그루비 소카 검색']],
+bars:[{res:4,t:{ohat:'..x...x...x...x.',cowbell:'x.X.x.X.x.X.x.X.',shaker:'xgxgxgxgxgxgxgxg',snare:'....X..x..x.X...',kick:'x...x...x...x...'}}]},
+{id:'dembow',cat:'월드·라틴',name:'레게톤',en:'Reggaeton · Dembow',bpm:95,range:'약 85~105',grid:'1/16',kick:'매 박 (4 온 더 플로어)',sn:'1박 a, 2박 & (반복)',feel:'3+3+2로 끈적하게 튐',
+mood:['끈적함','흥','여름밤'],genres:['레게톤','라틴 팝','뎀보'],games:['남미 도시 배경','해변 클럽','댄스 미니게임'],
+one:'킥은 4 온 더 플로어, 스네어는 "쿵-따-쿵따" 하는 뎀보(Dembow) 리듬을 반복합니다. 한 번 들으면 바로 알아들을 만큼 특징이 뚜렷한 리듬이에요.',
+body:['스네어 위치를 카운트로 쓰면 1박의 a, 2박의 &입니다. 3·4박에서 같은 모양을 한 번 더 반복해요. 킥까지 합쳐서 두 박(16분 8칸)을 보면 3칸, 3칸, 2칸으로 나뉘는 리듬이 됩니다.','디스코와 킥이 똑같은데도 전혀 다르게 들리는 까닭은 스네어 위치에 있습니다. 두 스타일을 번갈아 재생해서 스네어만 집중해서 들어 보세요.'],
+tips:['템포를 95 → 105로 올려 보고 분위기가 어떻게 바뀌는지 들어 보세요.'],
+refs:[['Daddy Yankee Gasolina','Daddy Yankee – Gasolina'],['dembow drum pattern tutorial','뎀보 리듬 튜토리얼']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'...x..x....x..x.',kick:'x...x...x...x...'}}]},
+{id:'onedrop',cat:'월드·라틴',name:'원드롭',en:'One Drop (Reggae)',bpm:76,range:'약 60~90',grid:'1/8T (셋잇단)',kick:'3박 한 번 (1박 없음)',sn:'3박 림샷',feel:'느긋하게 튕김',
+mood:['느긋함','평화로움','나른함'],genres:['레게','루츠 레게','덥'],games:['섬마을','낚시·휴식 콘텐츠','평화로운 NPC 집'],
+one:'1박에 킥이 없습니다. 킥과 림(사이드 스틱)을 3박에 한 번 같이 칩니다. 첫 박이 빠져 있어서 "원 드롭"이라는 이름이 붙었어요.',
+body:['밥 말리 앤 더 웨일러스의 드러머 칼튼 배럿(Carlton Barrett)이 이 리듬을 대표하는 연주자로 꼽힙니다. 밥 말리에게는 "One Drop"이라는 곡도 있어요.','킥이 3박에만 있어서 빈 공간이 많습니다. 레게에서는 그 빈 공간을 베이스와 기타의 엇박 스트로크가 채워요. 드럼만 들으면 허전한 게 정상입니다.'],
+tips:['1박에 킥을 넣어 보세요. 바로 평범한 리듬이 되면서 레게 느낌이 사라집니다.'],
+refs:[['Bob Marley One Drop','Bob Marley & The Wailers – One Drop'],['one drop reggae drum beat lesson','원드롭 레슨 영상']],
+bars:[{res:3,t:{hat:'x.xx.xx.xx.x',rim:'......X.....',kick:'......x.....'}}]},
+{id:'dnb',cat:'브레이크·베이스',name:'드럼앤베이스',en:'Drum & Bass · Breakbeat',bpm:172,range:'약 160~180',grid:'1/16',kick:'1박, 3박 엇박 (투스텝)',sn:'2·4박 + 고스트',feel:'빠르게 굴러감',
+mood:['질주','긴박함','사이버펑크'],genres:['드럼앤베이스','정글','브레이크비트'],games:['레이싱','추격전','사이버펑크 도시','시간 제한 스테이지'],
+one:'킥은 1박과 3박 엇박, 스네어는 2·4박에 칩니다. "투스텝"이라고 부르는 이 리듬을 170 BPM 근처로 빠르게 돌려요.',
+body:['정글과 드럼앤베이스는 옛날 펑크·소울 레코드의 드럼 구간(브레이크)을 잘라 빠르게 돌려 쓰면서 발전했습니다. 그중 가장 유명한 것이 The Winstons의 "Amen, Brother"에 들어 있는 드럼 브레이크, 흔히 말하는 아멘 브레이크예요.','고스트 스네어를 빼고 들어 보세요. 뼈대만 남아서 단순해집니다. 고스트가 들어가야 빠르게 굴러가는 느낌이 나요.'],
+tips:['템포를 86으로 내리면 같은 패턴이 힙합 비트처럼 들립니다. 드럼앤베이스가 하프타임으로도 들리는 까닭을 확인해 보세요.'],
+refs:[['The Winstons Amen Brother','The Winstons – Amen, Brother (아멘 브레이크 원곡)'],['drum and bass drum pattern tutorial','드럼앤베이스 패턴 튜토리얼']],
+bars:[{res:4,t:{ride:'x.x.x.x.x.x.x.x.',snare:'....X..g.g..X..g',kick:'x.........x.....'}}]},
+{id:'metal',cat:'록·메탈',name:'투베이스',en:'Double Bass (Metal)',bpm:150,range:'약 140~200 이상',grid:'1/16 (킥 연타)',kick:'16분 연타',sn:'2·4박',feel:'폭발적인 압박감',
+mood:['폭발','압박','분노'],genres:['메탈','멜로딕 데스 메탈','메탈코어'],games:['최종 보스전','대규모 전투','마계·지옥 스테이지'],
+one:'킥을 16분음표로 쉬지 않고 밟습니다. 페달 두 개(또는 트윈 페달)를 양발로 번갈아 밟아서 연주해요.',
+body:['킥이 바닥을 꽉 채워 주기 때문에 스네어는 2·4박만 쳐도 속도감이 큽니다. 스네어를 3박으로 옮기면 하프타임 메탈 리듬이 되는데, 같은 킥 위에서 속도감과 무게감을 번갈아 쓸 수 있어요.','미디로 찍을 때 킥 벨로시티를 모두 같게 두면 기관총처럼 들립니다. 양발 교대를 떠올리면서 왼발, 오른발 벨로시티를 조금씩 다르게 주세요.'],
+tips:['스네어를 3박 한 번으로 옮겨서 하프타임 버전도 만들어 보세요.','메탈을 전투 음악에 쓴 사례로 DOOM(2016) 사운드트랙을 찾아 들어 보세요.'],
+refs:[['double bass drum metal groove lesson','투베이스 그루브 레슨 영상'],['DOOM 2016 soundtrack Mick Gordon','DOOM (2016) OST – Mick Gordon']],
+bars:[{res:4,t:{crash:'X...............',ride:'..x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'xxxxxxxxxxxxxxxx'}}]},
+{id:'five4',cat:'3박·홀수박',name:'5/4 비트',en:'5/4 Beat',bpm:120,range:'곡마다 다름',grid:'5/4 · 1/16 (3+2)',kick:'1박, 4박',sn:'3박, 5박',feel:'한 박이 남는 듯 기우뚱',
+mood:['긴장','첩보','불안정'],genres:['재즈','프로그레시브 록','첩보물 OST'],games:['잠입·첩보 미션','퍼즐 풀이','이상한 나라 탐험'],
+one:'한 마디가 5박입니다. 보통 3박 + 2박으로 나눠서 "쿵-짝-쿵짝"처럼 느껴요.',
+body:['5박을 한 덩어리로 세면 어렵습니다. "하나 둘 셋 / 넷 다섯"으로 나눠서 세고, 나뉘는 자리마다 킥을 넣으면 몸이 금방 따라갑니다. 예시도 1박과 4박에 킥을 넣었어요.','데이브 브루벡 쿼텟의 "Take Five"와 랄로 시프린의 "Mission: Impossible" 테마가 5/4의 대표곡입니다. 4/4에 익숙한 귀에는 박이 하나 남는 느낌이 나서, 긴장되거나 어딘가 어긋난 장면에 써 보기 좋아요.'],
+tips:['DAW 박자를 5/4로 바꾼 뒤, 2+3으로도 나눠서 찍어 보세요. 같은 5박인데 느낌이 달라집니다.'],
+refs:[['Dave Brubeck Take Five','Dave Brubeck Quartet – Take Five'],['Mission Impossible theme Lalo Schifrin','Lalo Schifrin – Mission: Impossible']],
+bars:[{res:4,beats:5,t:{hat:'x.x.x.x.x.x.x.x.x.x.',snare:'........X.......X...',kick:'x...........x.......'}}]},
+{id:'seven8',cat:'3박·홀수박',name:'7/8 비트',en:'7/8 Beat',bpm:100,range:'곡마다 다름 (템포는 4분음표 기준)',grid:'7/8 · 1/8 (2+2+3)',kick:'첫째·셋째 묶음',sn:'3번째, 7번째 8분음표',feel:'절뚝이며 앞으로 굴러감',
+mood:['이국적','긴박','기묘함'],genres:['프로그레시브 록·메탈','발칸 민속음악','퓨전'],games:['이국적인 시장','기묘한 던전','긴박한 퍼즐'],
+one:'8분음표 일곱 개가 한 마디입니다. 2+2+3으로 묶어서 셉니다. 마지막 묶음이 하나 길어서 절뚝이는 느낌이 나요.',
+body:['7/8에서 흔히 쓰는 백비트는 3번째와 7번째 8분음표에 스네어를 치는 형태입니다. 예시가 이 패턴이에요. 시퀀서의 굵은 숫자가 묶음이 시작되는 자리입니다.','묶음은 2+2+3 말고도 3+2+2, 2+3+2로 바꿀 수 있습니다. 묶음 순서만 바꿔도 같은 7박이 전혀 다르게 들려요.'],
+tips:['"하나둘 하나둘 하나둘셋"으로 소리 내서 세면서 들어 보세요.'],
+refs:[['7/8 drum groove lesson','7/8 드럼 레슨 영상'],['balkan 7/8 rhythm','발칸 7/8 리듬 검색']],
+bars:[{res:2,beats:3.5,lab:['1','2','3','4','5','6','7'],bold:[0,2,4],t:{hat:'XxXxXxx',snare:'..X...X',kick:'x...x..'}}]},
+{id:'linear',cat:'펑크·소울·컨트리',name:'리니어 펑크',en:'Linear Funk',bpm:98,range:'약 85~110',grid:'1/16',kick:'다른 악기와 겹치지 않게',sn:'2·4박 + 고스트',feel:'한 줄로 이어지는 촘촘함',
+mood:['세련됨','기교','그루브'],genres:['펑크(Funk)','퓨전','네오소울'],games:['도시 야경','하이테크 연구소','세련된 메뉴 화면'],
+one:'킥, 스네어, 하이햇이 같은 칸에서 절대 겹치지 않습니다. 소리가 한 줄로 이어진다고 해서 "리니어"라고 불러요.',
+body:['보통 비트는 킥과 하이햇이 같이 나는데, 리니어는 한 칸에 악기가 하나뿐입니다. 그래서 16분음표가 악기를 바꿔 가며 쭉 이어지는 멜로디처럼 들려요. 그리드에서 세로로 두 칸이 겹치는 곳이 없는지 확인해 보세요.','드러머에게는 손발 협응이 많이 필요한 주법이지만, 미디로 찍을 때는 오히려 정리가 쉽습니다. 각 칸에 어떤 악기를 놓을지만 정하면 돼요.'],
+tips:['아무 칸이나 골라 다른 악기로 바꿔 보세요. 겹침 없이 바꾸기만 해도 새 리니어 패턴이 생깁니다.'],
+refs:[['linear drumming funk groove lesson','리니어 드러밍 레슨 영상']],
+bars:[{res:4,t:{hat:'.xx..x.x.x.x.x.x',snare:'...gX.....g.X...',kick:'x.....x.x.....x.'}}]},
+{id:'motown',cat:'펑크·소울·컨트리',name:'모타운',en:'Motown',bpm:120,range:'약 100~135',grid:'1/16',kick:'1·3박 근처',sn:'매 박 (2·4박 강하게)',feel:'밝게 통통 튐',
+mood:['밝음','복고','행복'],genres:['모타운 소울','레트로 팝','올디스'],games:['레트로 다이너','복고풍 쇼핑몰','밝은 캐릭터 테마'],
+one:'스네어를 2·4박뿐 아니라 매 박 칩니다. 탬버린이 함께 박을 찍어서 밝고 통통 튀는 느낌이 나요.',
+body:['보통 8비트는 스네어가 2·4박에만 있는데, 모타운 비트는 스네어가 1·2·3·4박을 모두 칩니다. 그래서 박이 아주 또렷하게 들려요. 예시에서는 2·4박을 악센트로 두고 1·3박은 조금 약하게 쳤습니다.','1960년대 디트로이트 모타운 레코드에서 나온 소울·팝 곡들의 리듬이라 이런 이름이 붙었습니다. 복고 분위기를 낼 때 탬버린을 빼먹지 마세요.'],
+tips:['탬버린을 끄면 평범한 비트에 가까워집니다. 탬버린이 복고 느낌에 얼마나 큰 역할을 하는지 들어 보세요.'],
+refs:[['motown drum beat lesson','모타운 드럼 레슨 영상'],['Motown 60s classics','1960년대 모타운 검색']],
+bars:[{res:4,t:{tamb:'x...X...x...X...',hat:'x.x.x.x.x.x.x.x.',snare:'x...X...x...X...',kick:'x.......x.x.....'}}]},
+{id:'purdie',cat:'펑크·소울·컨트리',name:'퍼디 셔플',en:'Purdie Half-time Shuffle',bpm:85,range:'약 70~95',grid:'1/8T (셋잇단)',kick:'1박, 2박 셋째 칸, 4박',sn:'3박 백비트 + 셋잇단 가운데 고스트',feel:'끈적하게 굴러감',
+mood:['그루브','여유','고급스러움'],genres:['펑크·소울','AOR·시티팝','퓨전'],games:['도시 드라이브','라운지','여유로운 탐험'],
+one:'하프타임 셔플에 고스트 노트를 채운 리듬입니다. 하이햇이 셋잇단 첫째·셋째 칸을 치고, 비는 가운데 칸에 스네어 고스트가 들어가요.',
+body:['드러머 버나드 퍼디(Bernard Purdie)의 연주로 유명해져서 "퍼디 셔플"이라고 부릅니다. 토토의 "Rosanna"에서 제프 포카로가 연주한 셔플도 이 계열이에요.','하이햇과 고스트 스네어가 번갈아 셋잇단을 모두 채우기 때문에, 템포가 느린데도 리듬이 쉬지 않고 굴러갑니다. 고스트를 끄고 켜면서 차이를 들어 보세요.'],
+tips:['스네어 백비트를 3박에 두는 것을 잊지 마세요. 2·4박에 두면 일반 셔플이 됩니다.'],
+refs:[['Bernard Purdie shuffle','버나드 퍼디 셔플 영상'],['Toto Rosanna drums','Toto – Rosanna']],
+bars:[{res:3,t:{hat:'x.xx.xx.xx.x',snare:'.g..g.Xg..g.',kick:'x....x...x..'}}]},
+{id:'newjack',cat:'펑크·소울·컨트리',name:'뉴잭스윙',en:'New Jack Swing',bpm:104,swing:63,range:'약 95~115',grid:'1/16 (강한 스윙)',kick:'싱코페이션',sn:'2·4박 (스네어 + 클랩)',feel:'튕기듯 스윙',
+mood:['힙함','90년대','경쾌함'],genres:['뉴잭스윙','90년대 R&B','레트로 K-POP'],games:['90년대 배경','댄스 배틀','캐릭터 등장 연출'],
+one:'16분음표에 강한 스윙을 걸고, 드럼 머신 킥과 크게 겹친 스네어·클랩으로 튕기는 리듬을 만듭니다.',
+body:['1980년대 후반 프로듀서 테디 라일리(Teddy Riley)가 R&B에 힙합 드럼 머신 리듬을 섞으면서 퍼진 스타일입니다. 스윙이 63%로 설정되어 있어요. 50%로 내리면 전혀 다른 장르처럼 들립니다.','스네어와 클랩을 2·4박에 함께 쳐서 백비트를 크고 납작하게 만듭니다. 90년대 분위기를 낼 때 이 겹친 백비트가 중요한 역할을 해요.'],
+tips:['스윙을 55, 60, 65%로 바꿔 가며 들어 보세요. 뉴잭스윙은 꽤 강하게 걸어야 제맛이 납니다.'],
+refs:[['new jack swing drum pattern','뉴잭스윙 드럼 패턴 영상'],['Teddy Riley new jack swing','테디 라일리 검색']],
+bars:[{res:4,t:{hat:'xgxgxgxgxgxgxgxg',clap:'....X.......X...',snare:'....X.......X...',ekick:'x..x..x...x..x..'}}]},
+{id:'train',cat:'펑크·소울·컨트리',name:'트레인 비트',en:'Train Beat (Country)',bpm:130,range:'약 110~170',grid:'1/16',kick:'1·3박',sn:'16분 연타 + 2·4박 악센트',feel:'기차처럼 칙칙폭폭',
+mood:['경쾌함','시골길','여행'],genres:['컨트리','로커빌리','블루그래스풍 록'],games:['서부 개척 마을','기차·마차 이동','시골 농장'],
+one:'스네어가 16분음표를 작게 쉬지 않고 치고, 2·4박만 크게 칩니다. 기차가 달리는 소리처럼 들려서 트레인 비트라고 불러요.',
+body:['트레인 비트는 하이햇보다 스네어가 중심입니다. 고스트 노트와 악센트를 섞는 것이 이 리듬의 전부라고 해도 될 정도예요. 고스트가 크면 시끄럽고, 너무 작으면 기차 느낌이 안 납니다.','드러머는 브러시로 치는 경우도 많습니다. 미디로 찍을 때 브러시 음원이 있다면 바꿔서 들어 보세요. 훨씬 부드러운 시골길 느낌이 납니다.'],
+tips:['악센트를 2·4박이 아니라 매 박에 두면 더 빠르게 달리는 느낌이 납니다.'],
+refs:[['country train beat drum lesson','트레인 비트 레슨 영상']],
+bars:[{res:4,t:{snare:'ggggXgggggggXggg',kick:'x.......x.......'}}]},
+{id:'techno',cat:'댄스·전자',name:'테크노',en:'Techno',bpm:130,range:'약 125~140',grid:'1/16',kick:'매 박 (전자 킥)',sn:'클랩은 가볍게, 퍼커션 위주',feel:'기계적으로 몰아침',
+mood:['기계적','최면','어두운 클럽'],genres:['테크노','미니멀','인더스트리얼 테크노'],games:['사이버 공장','해킹 미니게임','디스토피아 도시'],
+one:'4 온 더 플로어 킥 위에 엇박 오픈 하이햇과 짧은 퍼커션이 반복됩니다. 하우스보다 빠르고 차갑게 들려요.',
+body:['테크노는 1980년대 미국 디트로이트에서 시작된 장르로 알려져 있습니다. 같은 4 온 더 플로어지만 하우스보다 화성이나 보컬이 적고, 반복과 음색 변화로 곡을 끌고 가요.','예시의 림은 3칸, 3칸, 2칸으로 반복되는 퍼커션입니다. 4박 킥과 엇갈리면서 반복 속에서도 움직임이 생겨요.'],
+tips:['림을 끄고 켜 보세요. 테크노는 이런 작은 퍼커션 하나가 곡의 개성을 만듭니다.'],
+refs:[['techno drum pattern tutorial','테크노 드럼 패턴 튜토리얼'],['Detroit techno','디트로이트 테크노 검색']],
+bars:[{res:4,t:{ohat:'..x...x...x...x.',clap:'....x.......x...',rim:'x..x..x.x..x..x.',ekick:'x...x...x...x...'}}]},
+{id:'synthwave',cat:'댄스·전자',name:'신스웨이브',en:'Synthwave · 80s Gated',bpm:100,range:'약 85~120',grid:'1/16',kick:'1·3박 근처 (드럼 머신)',sn:'게이트 리버브 스네어 2·4박',feel:'크고 번쩍이는 80년대',
+mood:['네온','향수','드라이브'],genres:['신스웨이브','80년대 팝','레트로웨이브'],games:['네온 레이싱','80년대 배경','레트로 슈팅'],
+one:'잔향을 크게 걸었다가 뚝 잘라 버린 "게이트 리버브" 스네어가 특징입니다. 스네어가 크고 넓은데 꼬리는 짧아요.',
+body:['게이트 리버브는 1980년대 팝과 록에서 크게 유행한 드럼 소리입니다. 필 콜린스의 "In the Air Tonight" 후반부 드럼이 대표적인 예예요. 신스웨이브는 그 시절 소리를 다시 가져온 장르라서 이 스네어가 거의 필수입니다.','둘째 마디 끝에 80년대식 탐 후리기를 넣었습니다. 탐에도 잔향을 크게 걸면 그 시절 느낌이 더 살아나요. 공간감 슬라이더를 올려서 들어 보세요.'],
+tips:['게이트 스네어를 일반 스네어로 바꿔서 비교해 보세요. 리듬은 같아도 시대감이 사라집니다.'],
+refs:[['Phil Collins In the Air Tonight','Phil Collins – In the Air Tonight'],['synthwave drums gated reverb tutorial','게이트 리버브 튜토리얼']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',gsnare:'....X.......X...',ekick:'x.......x.x.....'}},{res:4,t:{hat:'x.x.x.x.x.x.....',gsnare:'....X...........',tomH:'............X.X.',tomL:'.............X.X',ekick:'x.......x.......'}}]},
+{id:'ukg',cat:'댄스·전자',name:'UK 개러지 (투스텝)',en:'UK Garage · 2-Step',bpm:132,swing:61,range:'약 128~138',grid:'1/16 (스윙)',kick:'1박, 3박 엇박 (2·4박 킥 생략)',sn:'2·4박',feel:'건너뛰듯 통통 튐',
+mood:['경쾌함','도시의 밤','세련됨'],genres:['UK 개러지','투스텝','베이스라인'],games:['런던풍 도시','스케이트·파쿠르','야간 레이싱'],
+one:'4 온 더 플로어에서 일부 킥을 빼서 "건너뛰는" 느낌을 만듭니다. 16분음표에 스윙을 걸어서 통통 튀어요.',
+body:['하우스처럼 매 박 킥을 치지 않고 1박과 3박 엇박 근처에만 킥을 둡니다. 비어 있는 박이 생기면서 리듬이 한 걸음씩 건너뛰는 것처럼 들려요. 그래서 투스텝이라고 부릅니다.','스윙이 61%로 설정되어 있습니다. 쉐이커의 16분이 튀어야 투스텝답게 들리니, 스윙을 50%로 내렸을 때와 비교해 보세요.'],
+tips:['킥을 매 박으로 채워 보세요. 바로 하우스처럼 바뀝니다.'],
+refs:[['uk garage 2 step drum pattern','투스텝 드럼 패턴 영상']],
+bars:[{res:4,t:{shaker:'xgxgxgxgxgxgxgxg',ohat:'..x.......x.....',rim:'....X.......X...',ekick:'x.........x.....'}}]},
+{id:'breakbeat',cat:'브레이크·베이스',name:'브레이크비트',en:'Breakbeat · Big Beat',bpm:125,range:'약 110~140',grid:'1/16',kick:'1박, 1박 &, 3박 &',sn:'2·4박 + 고스트',feel:'펑키하게 덜컹거림',
+mood:['거침','에너지','액션'],genres:['브레이크비트','빅비트','일렉트로 펑크'],games:['액션 레이싱','스파이 액션','익스트림 스포츠'],
+one:'펑크 레코드의 드럼 구간(브레이크)처럼 킥이 엇박에 자주 들어가는 리듬입니다. 4 온 더 플로어보다 덜컹거리고 거칠어요.',
+body:['킥이 정박보다 엇박에 많이 들어가서 몸이 앞으로 쏠리는 느낌이 납니다. 고스트 스네어가 그 사이를 채워서 펑키한 맛이 나요.','1990년대 영국의 빅비트는 이런 브레이크비트에 록 기타와 큰 신스 소리를 얹은 장르입니다. 템포를 170으로 올리면 드럼앤베이스 쪽 에너지가 납니다.'],
+tips:['킥 하나를 정박으로 옮겨 보세요. 덜컹거리는 맛이 줄어드는 게 들립니다.'],
+refs:[['breakbeat drum pattern tutorial','브레이크비트 패턴 튜토리얼'],['big beat 90s','빅비트 검색']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X..g.g..X...',kick:'x.x.......x.....'}}]},
+{id:'jungle',cat:'브레이크·베이스',name:'정글 (아멘 변형)',en:'Jungle · Amen Chop',bpm:170,range:'약 160~175',grid:'1/16',kick:'잘게 쪼개 흩어 놓음',sn:'2·4박 + 잘게 쪼갠 스네어',feel:'정신없이 쪼개짐',
+mood:['혼돈','질주','언더그라운드'],genres:['정글','드럼앤베이스','브레이크코어'],games:['사이버펑크 추격','해킹 타임어택','폭주 스테이지'],
+one:'아멘 브레이크 같은 드럼 샘플을 잘게 잘라 순서를 바꿔 붙인 리듬입니다. 드럼앤베이스보다 훨씬 쪼개지고 정신없어요.',
+body:['예시는 아멘 브레이크 첫 마디를 단순하게 옮긴 패턴과, 그것을 잘라 순서를 바꾼 둘째 마디로 짰습니다. 실제 정글은 녹음된 브레이크 샘플을 잘라서 만드니까, 원곡 브레이크를 꼭 들어 보세요.','드럼앤베이스 탭과 번갈아 들어 보면 차이가 분명합니다. 드럼앤베이스는 투스텝으로 단정하게 가고, 정글은 스네어가 여기저기 튀어나와요.'],
+tips:['둘째 마디의 스네어를 몇 개 더 옮겨서 나만의 "찹(chop)"을 만들어 보세요.'],
+refs:[['The Winstons Amen Brother','The Winstons – Amen, Brother'],['jungle amen chop tutorial','아멘 찹 튜토리얼']],
+bars:[{res:4,t:{ride:'x.x.x.x.x.x.x.x.',snare:'....X..x.x..X..x',kick:'x.x.......xx....'}},{res:4,t:{ride:'x.x.x.x.x.x.x.x.',snare:'X...X..x.x..X.X.',kick:'..x.......x..x..'}}]},
+{id:'dubstep',cat:'하드 일렉트로닉',name:'덥스텝',en:'Dubstep',bpm:140,range:'약 138~150',grid:'1/16 (하프타임)',kick:'1박 + 듬성듬성',sn:'3박 (하프타임)',feel:'느리고 무겁게 짓누름',
+mood:['육중함','공격적','어두움'],genres:['덥스텝','브로스텝','리디엄'],games:['로봇·메카 전투','보스 페이즈 전환','사이버 액션'],
+one:'140 BPM 근처에서 스네어를 3박에 한 번만 치는 하프타임 리듬입니다. 드럼은 단순하게 두고, 그 빈자리를 거대한 베이스가 채워요.',
+body:['덥스텝의 드럼은 오히려 비어 있습니다. 1박 킥, 3박 스네어라는 뼈대만 두고, 베이스(워블 베이스)가 리듬을 끌고 가요. 그래서 드럼만 들으면 허전한 게 정상입니다.','둘째 마디에는 킥을 엇박에 몇 개 추가하고 하이햇 롤을 넣었습니다. 드롭 구간에서 마디마다 킥 위치를 조금씩 바꾸면 단조롭지 않아요.'],
+tips:['하프타임 탭과 비교해 보세요. 리듬 뼈대는 같고, 소리 선택과 베이스가 장르를 가릅니다.'],
+refs:[['dubstep drum pattern tutorial','덥스텝 드럼 패턴 튜토리얼']],
+bars:[{res:4,t:{hat:'x...x...x...x...',snare:'........X.......',clap:'........X.......',ekick:'x...............'}},{res:4,t:{hat:'x...x...x...2222',snare:'........X.......',clap:'........X.......',ekick:'x.....x..x......'}}]},
+{id:'hardstyle',cat:'하드 일렉트로닉',name:'하드스타일',en:'Hardstyle',bpm:150,range:'약 145~160',grid:'1/16',kick:'매 박, 일그러진 하드 킥',sn:'클랩 2·4박',feel:'쾅쾅 찍어 누름',
+mood:['폭발','축제','하드'],genres:['하드스타일','로우스타일','하드댄스'],games:['리듬 게임 고난도 곡','페스티벌 스테이지','광폭화 보스'],
+one:'디스토션을 세게 건 킥이 매 박 "쾅" 하고 찍힙니다. 킥에 음정 있는 긴 꼬리가 붙어서 킥 자체가 베이스 역할도 해요.',
+body:['하드스타일은 2000년대 네덜란드를 중심으로 발전한 장르로 알려져 있습니다. 킥 소리를 직접 디자인하는 경우가 많아서, 킥 하나에 곡의 개성이 거의 다 들어 있어요.','킥 꼬리가 길어서 다른 저음 악기와 부딪히기 쉽습니다. 실제 작업에서는 킥 꼬리의 음정을 곡의 키에 맞춰요. 이 시퀀서의 하드 킥은 합성 소리라 실제 하드스타일 킥보다 단순합니다.'],
+tips:['템포를 180 이상으로 올리면 가바(하드코어) 탭과 비슷한 에너지가 납니다.'],
+refs:[['hardstyle kick tutorial','하드스타일 킥 튜토리얼'],['hardstyle drum pattern','하드스타일 패턴 검색']],
+bars:[{res:4,t:{ohat:'..x...x...x...x.',clap:'....X.......X...',hkick:'x...x...x...x...'}}]},
+{id:'gabber',cat:'하드 일렉트로닉',name:'가바 (하드코어)',en:'Gabber · Hardcore',bpm:185,range:'약 160~200 이상',grid:'1/16',kick:'매 박, 극단적으로 일그러진 킥',sn:'거의 없음',feel:'쉴 새 없이 두들김',
+mood:['광기','분노','폭주'],genres:['가바','하드코어 테크노','프렌치코어'],games:['폭주 모드','최종 보스 광폭화','고난도 리듬 게임'],
+one:'아주 빠른 템포에서 찌그러진 킥이 매 박 쏟아집니다. 다른 드럼은 거의 없이 킥이 곡을 다 끌고 가요.',
+body:['가바는 1990년대 네덜란드 로테르담에서 시작된 하드코어 테크노로 알려져 있습니다. 하드스타일보다 빠르고, 킥이 더 짧고 거칠게 찌그러져 있어요.','킥이 쉬지 않기 때문에 변화는 킥을 잠깐 빼는 구간에서 생깁니다. 4마디나 8마디마다 킥을 1마디 빼 보면 긴장과 해소가 분명해져요.'],
+tips:['킥만 남기고 하이햇을 꺼 보세요. 가바는 킥만으로도 곡이 성립합니다.'],
+refs:[['gabber kick drum','가바 킥 검색'],['rotterdam gabber 90s','90년대 로테르담 가바 검색']],
+bars:[{res:4,t:{hat:'..x...x...x...x.',hkick:'x...x...x...x...'}}]},
+{id:'hardrock',cat:'록·메탈',name:'하드록',en:'Hard Rock',bpm:118,range:'약 100~140',grid:'1/16 (8분 중심)',kick:'1박, 2박 a, 3박',sn:'2·4박 림샷',feel:'두껍고 시원하게 쏴아',
+mood:['힘','자신감','질주'],genres:['하드록','글램 메탈','스타디움 록'],games:['오토바이·레이싱','전투 필드 BGM','열혈 주인공 테마'],
+one:'하이햇을 반쯤 열어 "쏴-" 하는 소리로 8분음표를 치고, 스네어는 림까지 함께 때리는 림샷으로 크게 칩니다.',
+body:['8비트와 리듬 뼈대는 같지만 소리가 다릅니다. 오픈 하이햇의 쏴- 하는 소리와 림샷 스네어가 곡을 두껍게 만들어요. 드럼 소리 선택만으로 장르가 바뀌는 좋은 예입니다.','2박 a 자리에 킥을 하나 넣어서 3박 쪽으로 밀고 들어가는 힘을 만들었습니다. 이 킥을 빼고 들어 보면 차이가 잘 들려요.'],
+tips:['림샷을 일반 스네어로 바꿔 보세요. 같은 리듬인데 힘이 확 줄어듭니다.'],
+refs:[['hard rock drum beat lesson','하드록 드럼 레슨 영상'],['AC/DC Highway to Hell','AC/DC – Highway to Hell']],
+bars:[{res:4,t:{crash:'X...............',ohat:'..x.x.x.x.x.x.x.',rshot:'....X.......X...',kick:'x......xx.x.....'}}]},
+{id:'twobeat',cat:'록·메탈',name:'투비트 (스킨 비트)',en:'Two-beat · Skank Beat',bpm:180,range:'약 160~220',grid:'1/16 (8분 교대)',kick:'매 박',sn:'매 박 엇박',feel:'쿵짝쿵짝 달려감',
+mood:['질주','흥분','난장'],genres:['펑크록','스래시 메탈','멜로딕 하드코어','폴카'],games:['폭주 추격','코믹 난투','레트로 아케이드'],
+one:'킥과 스네어가 8분음표로 "쿵짝쿵짝" 번갈아 나옵니다. 정박에 킥, 엇박에 스네어예요.',
+body:['느리게 치면 폴카, 빠르게 치면 펑크록이나 스래시 메탈의 "스킨 비트"가 됩니다. 같은 리듬이 템포에 따라 전혀 다른 장르가 되는 셈이에요. 트로트를 "뽕짝"이라고 부르는 것도 이런 쿵-짝 리듬에서 왔다는 말이 있습니다.','심벌은 킥과 함께 정박에 칩니다. 템포 200 이상에서는 라이드 대신 크래시를 매 박 쳐서 소리를 더 거칠게 만들기도 해요.'],
+tips:['템포를 100, 160, 210으로 바꿔 가며 들어 보세요. 폴카에서 스래시까지 한 패턴으로 이어집니다.'],
+refs:[['punk two beat drum lesson','펑크 투비트 레슨 영상'],['thrash metal skank beat','스래시 스킨 비트 영상']],
+bars:[{res:4,t:{ride:'x...x...x...x...',snare:'..X...X...X...X.',kick:'x...x...x...x...'}}]},
+{id:'gallop',cat:'록·메탈',name:'갤럽 (파워 메탈)',en:'Gallop · Power Metal',bpm:170,range:'약 150~200',grid:'1/16',kick:'8분 + 16분 두 개 (갤럽)',sn:'2·4박',feel:'말이 달리듯 두그닥',
+mood:['영웅적','질주','장엄'],genres:['파워 메탈','헤비 메탈','멜로딕 스피드 메탈'],games:['기사단 출정','드래곤 전투','판타지 영웅 테마'],
+one:'킥이 "쿵-쿠쿵, 쿵-쿠쿵" 하고 말이 달리는 소리처럼 들립니다. 8분음표 하나 뒤에 16분음표 두 개가 붙는 모양이에요.',
+body:['말발굽 소리를 닮았다고 해서 갤럽이라고 부릅니다. 헤비 메탈에서 기타 리프와 킥을 이 리듬으로 맞추는 경우가 많고, 파워 메탈에서는 투베이스로 빠르게 밟아서 영웅적인 질주감을 만들어요.','크래시를 매 박 쳐서 소리를 넓게 펼쳤습니다. 판타지 RPG의 전투나 출정 장면처럼 장엄하면서 빠른 곡에 잘 어울려요.'],
+tips:['킥을 16분 연타(투베이스 탭)로 바꿔서 비교해 보세요. 연타는 압박감, 갤럽은 달리는 느낌이 납니다.'],
+refs:[['heavy metal gallop drum','메탈 갤럽 드럼 영상'],['power metal drumming','파워 메탈 드럼 검색']],
+bars:[{res:4,t:{crash:'X...x...x...x...',snare:'....X.......X...',kick:'x.xxx.xxx.xxx.xx'}}]},
+{id:'breakdown',cat:'록·메탈',name:'브레이크다운',en:'Metalcore Breakdown',bpm:140,range:'표기 약 120~160 (하프타임 느낌)',grid:'1/16',kick:'기타 리프에 맞춘 싱코페이션',sn:'3박 (하프타임)',feel:'짓밟듯 무거움',
+mood:['육중함','분노','압도'],genres:['메탈코어','데스코어','하드코어'],games:['보스 페이즈 전환','거대 적 등장','처형 연출'],
+one:'템포를 늦추지 않고 하프타임으로 바꾼 뒤, 킥을 기타 리프의 "칙-칙" 리듬에 맞춰 짓밟듯 칩니다. 차이나 심벌이 거칠게 박을 찍어요.',
+body:['브레이크다운은 곡 중간에 갑자기 무겁게 떨어지는 구간입니다. 킥은 드럼만의 리듬이 아니라 기타 리프와 똑같이 맞춰요. 그래서 기타 리프를 먼저 정하고 킥을 그 위에 그리는 순서로 작업합니다.','차이나 심벌은 지저분하고 찢어지는 소리가 나서 브레이크다운의 거친 분위기를 만들어 줍니다.'],
+tips:['둘째 마디 끝의 킥 연타를 빼 보세요. 다음 구간으로 넘어가는 힘이 줄어듭니다.'],
+refs:[['metalcore breakdown drums','메탈코어 브레이크다운 드럼 영상']],
+bars:[{res:4,t:{china:'x...x...x...x...',snare:'........X.......',kick:'x..x..x...x.x...'}},{res:4,t:{china:'x...x...x...x...',snare:'........X.......',kick:'x..x..x.x.x.xxxx'}}]},
+{id:'djent',cat:'록·메탈',name:'젠트',en:'Djent',bpm:120,range:'약 100~140',grid:'1/16 (3칸 묶음)',kick:'16분 3칸마다 (리프와 유니즌)',sn:'3박 (하프타임)',feel:'어긋나면서 맞물림',
+mood:['기계적','복잡함','현대적'],genres:['젠트','프로그레시브 메탈','메탈코어'],games:['SF 우주선','기계 문명 보스','복잡한 퍼즐 던전'],
+one:'킥이 16분음표 3칸마다 들어가서 4/4 박과 계속 어긋납니다. 대신 스네어가 3박에 고정되어 마디를 붙잡아 줘요.',
+body:['3칸 묶음은 16칸짜리 마디에 딱 나눠떨어지지 않습니다. 그래서 둘째 마디에서는 킥이 다른 위치에서 시작해요. 킥은 어긋나는데 스네어와 심벌은 4/4를 지키니까, 듣는 사람은 혼란스러우면서도 박을 잃지 않습니다.','메슈가(Meshuggah)의 영향을 받은 밴드들에서 퍼진 스타일로 알려져 있어요. 7현·8현 기타의 낮은 리프에 킥을 똑같이 맞추는 것이 특징입니다.'],
+tips:['스네어를 2·4박으로 옮겨 보세요. 4/4를 붙잡는 힘이 달라지는 게 들립니다.'],
+refs:[['djent drum groove','젠트 드럼 그루브 영상'],['Meshuggah drums','Meshuggah 드럼 검색']],
+bars:[{res:4,t:{china:'x...x...x...x...',snare:'........X.......',kick:'x..x..x..x..x..x'}},{res:4,t:{china:'x...x...x...x...',snare:'........X.......',kick:'..x..x..x..x..x.'}}]},
+{id:'steppers',cat:'월드·라틴',name:'스테퍼스',en:'Steppers (Reggae)',bpm:76,range:'약 65~85',grid:'1/8T (셋잇단)',kick:'매 박',sn:'3박 림샷',feel:'묵직하게 걸어감',
+mood:['단단함','행진','명상'],genres:['레게','루츠 레게','덥'],games:['섬 원주민 마을','의식·제례','느긋한 항해'],
+one:'원드롭에서 킥만 매 박으로 바꾼 리듬입니다. 킥이 바닥을 쿵쿵 받쳐 줘서 걸어가는 듯한 힘이 생겨요.',
+body:['원드롭은 1박이 비어서 둥둥 떠 있는 느낌이었다면, 스테퍼스는 킥이 매 박 발을 딛습니다. 같은 레게라도 훨씬 단단하고 힘 있게 들려요.','원드롭 탭과 번갈아 재생해 보세요. 3박 림은 그대로인데 킥 위치만 바뀌어도 분위기가 많이 달라집니다.'],
+tips:['킥을 1박과 3박에만 남겨 보세요. 원드롭과 스테퍼스 사이의 "록커스" 느낌에 가까워집니다.'],
+refs:[['steppers reggae drum beat','스테퍼스 레게 드럼 영상']],
+bars:[{res:3,t:{hat:'x.xx.xx.xx.x',rim:'......X.....',kick:'x..x..x..x..'}}]},
+{id:'habanera',cat:'월드·라틴',name:'하바네라·탱고',en:'Habanera · Tango',bpm:96,range:'곡마다 다름',grid:'1/16',kick:'"쿵--쿵쿵-쿵" (하바네라)',sn:'거의 없음',feel:'느릿하게 휘감김',
+mood:['정열','관능','긴장'],genres:['탱고','하바네라','스페인풍 OST'],games:['스페인풍 도시','투우장·결투','가면무도회'],
+one:'반 마디 안에서 "쿵--쿵쿵-쿵"으로 치는 하바네라 리듬입니다. 점8분음표, 16분음표, 8분음표 두 개가 이어지는 모양이에요.',
+body:['하바네라는 쿠바에서 시작해 탱고를 비롯한 여러 라틴 음악에 퍼진 리듬입니다. 비제의 오페라 "카르멘"의 아리아 "하바네라"로도 잘 알려져 있어요.','탱고는 원래 드럼 세트를 거의 쓰지 않고 반도네온, 피아노, 콘트라베이스가 이 리듬을 냅니다. 게임음악에서 드럼으로 옮길 때는 킥이나 낮은 탐으로 무게만 살짝 더해 주세요.'],
+tips:['킥을 플로어 탐으로 옮겨 보세요. 더 어둡고 극적인 분위기가 납니다.'],
+refs:[['Bizet Carmen Habanera','비제 – 카르멘 중 하바네라'],['habanera rhythm explained','하바네라 리듬 설명 영상']],
+bars:[{res:4,t:{shaker:'x.x.x.x.x.x.x.x.',rim:'....x.......x...',kick:'x..xx.x.x..xx.x.'}}]},
+{id:'sonclave',cat:'월드·라틴',name:'손 클라베 (살사)',en:'Son Clave 3-2 · Salsa',bpm:100,range:'약 80~110 (살사는 더 빠르게도)',grid:'1/16, 2마디 패턴',kick:'2박 &, 4박 (베이스 툼바오에 맞춤)',sn:'없음 (클라베·카우벨)',feel:'두 마디가 질문과 대답',
+mood:['열정','흥','파티'],genres:['살사','손 쿠바노','라틴 재즈'],games:['카리브 항구','라틴 파티','댄스 미니게임'],
+one:'클라베(나무 막대)가 두 마디짜리 리듬을 반복합니다. 3-2 클라베는 첫 마디에 세 번, 둘째 마디에 두 번 쳐요.',
+body:['3-2 손 클라베는 첫 마디에 1박, 2박 &, 4박을 치고, 둘째 마디에 2박과 3박을 칩니다. 살사 연주자들은 모든 파트를 이 클라베에 맞춰서 연주해요. 클라베와 어긋나게 치면 "클라베가 틀렸다"고 말할 정도입니다.','예시의 킥은 살사 베이스가 자주 치는 2박 &와 4박에 맞췄습니다. 실제 살사는 드럼 세트보다 콩가, 팀발레스, 봉고 같은 타악기가 리듬을 맡는 경우가 많아요.'],
+tips:['두 마디 순서를 바꾸면 2-3 클라베가 됩니다. 시퀀서에서 두 마디의 우드블록 칸을 서로 바꿔 보세요.'],
+refs:[['son clave 3-2 explained','3-2 손 클라베 설명 영상'],['salsa percussion timbales congas','살사 타악기 검색']],
+bars:[{res:4,t:{block:'X.....X.....X...',cowbell:'x...x...x...x...',kick:'......x.....x...'}},{res:4,t:{block:'....X...X.......',cowbell:'x...x...x...x...',kick:'......x.....x...'}}]}
+,
+{id:'waltz',cat:'3박·홀수박',name:'왈츠',en:'Waltz · 3/4',bpm:140,range:'느린 왈츠 약 85~95 / 빠른 왈츠 약 170~180',grid:'3/4 · 1/8',kick:'1박',sn:'2·3박 (가볍게)',feel:'쿵-짝-짝',
+mood:['우아함','낭만','동화'],genres:['왈츠','샹송','왈츠풍 OST'],games:['무도회장','오르골·동화 마을','고풍스러운 저택'],
+one:'한 마디가 3박입니다. 1박에 킥, 2·3박에 가벼운 림을 쳐서 "쿵-짝-짝"을 만들어요.',
+body:['지금까지 본 스타일은 모두 한 마디가 4박이었는데, 왈츠는 3박입니다. 시퀀서 칸 수가 줄어든 것을 확인해 보세요. 칸 하나가 8분음표예요.','왈츠는 드럼보다 오케스트라나 피아노 왼손 반주로 만드는 경우가 많습니다. 게임에서 드럼 세트로 왈츠를 칠 때는 소리를 작게 하고, 브러시나 림처럼 가벼운 음색을 쓰면 분위기가 덜 깨져요.'],
+tips:['템포 90 근처와 175 근처를 번갈아 들어 보세요. 같은 3박인데 느린 왈츠는 부드럽게 흔들리고, 빠른 왈츠는 빙글빙글 도는 느낌이 납니다.'],
+refs:[['waltz drum beat 3/4 lesson','3/4 왈츠 드럼 영상'],['Shostakovich Waltz No. 2','쇼스타코비치 – 왈츠 2번']],
+bars:[{res:2,beats:3,t:{hat:'x.x.x.',rim:'..x.x.',kick:'x.....'}}]},
+{id:'six8',cat:'3박·홀수박',name:'6/8 비트',en:'6/8 Beat',bpm:70,range:'점4분음표 기준 약 50~90',grid:'6/8 · 1/8',kick:'첫 큰 박 (+마디 끝 픽업)',sn:'둘째 큰 박',feel:'두 박인데 셋씩 출렁임',
+mood:['서정','모험','민속풍'],genres:['록 발라드','켈틱·포크','6/8 행진곡'],games:['판타지 선술집','항해·배 위','켈틱풍 마을'],
+one:'8분음표 여섯 개가 한 마디입니다. 셋씩 묶어서 큰 박 두 개로 세고, 둘째 큰 박에 스네어를 쳐요.',
+body:['"하나 둘 셋 넷 다섯 여섯"으로 세되 하나와 넷에 힘을 줍니다. 시퀀서 템포는 점4분음표, 즉 셋씩 묶은 큰 박 기준이에요. DAW에서는 박자를 6/8로 바꾸고 그리드를 1/8로 두세요.','12/8 발라드와 비슷하게 들리지만, 6/8은 한 마디에 큰 박이 둘입니다. 같은 템포라면 마디가 더 빨리 돌아와서 앞으로 걸어가는 느낌이 강해요. 판타지 게임의 선술집이나 항해 장면에 잘 어울리는 박자입니다.'],
+tips:['하이햇을 끄고 킥과 스네어만 들어 보세요. 6/8이 큰 박 두 개로 걷는 리듬이라는 것이 더 잘 들립니다.'],
+refs:[['6/8 drum beat lesson','6/8 드럼 레슨 영상'],['celtic jig 6/8 drums','켈틱 6/8 지그 검색']],
+bars:[{res:3,beats:2,t:{hat:'XxxXxx',snare:'...X..',kick:'x.....'}},{res:3,beats:2,t:{hat:'XxxXxx',snare:'...X..',kick:'x.x..x'}}]},
+{id:'b128',cat:'3박·홀수박',name:'12/8 발라드',en:'12/8 Ballad',bpm:60,range:'점4분음표 기준 약 50~75',grid:'12/8 · 1/8T',kick:'1·3박 근처',sn:'2·4박',feel:'느리게 출렁임',
+mood:['애절함','감성','여운'],genres:['소울 발라드','블루스 발라드','록 발라드','가요 발라드'],games:['이별·희생 컷신','엔딩 크레딧','회상 장면'],
+one:'4박인데 한 박이 셋으로 나뉩니다. 하이햇이 셋잇단을 쉬지 않고 치고, 그 위에서 킥과 스네어가 느리게 움직여요.',
+body:['셔플과 그리드는 같지만 하이햇이 셋잇단 세 칸을 모두 칩니다. 그래서 출렁임이 부드럽게 이어지고, 템포가 느려도 박 사이가 비어 보이지 않아요.','"따다다 따다다"가 계속 깔리는 리듬이라 감정이 쌓이는 장면에 잘 맞습니다. 컷신 음악처럼 템포를 60 이하로 내릴 때 써 보세요.'],
+tips:['스네어 바로 앞 칸(셋째 셋잇단)에 킥을 하나 넣어 보세요. 무게가 실리면서 소울 발라드 느낌이 납니다.'],
+refs:[['12/8 ballad drum groove','12/8 발라드 그루브 영상'],['slow blues 12/8 drums','슬로 블루스 12/8 검색']],
+bars:[{res:3,beats:4,t:{hat:'XxxXxxXxxXxx',snare:'...X.....X..',kick:'x.....x.x...'}}]},
+{id:'swing',cat:'3박·홀수박',name:'스윙(재즈)',en:'Swing · Jazz Ride',bpm:140,range:'약 100~260 (곡마다 차이 큼)',grid:'1/8T (셋잇단)',kick:'아주 작게 매 박 (페더링)',sn:'자유롭게 끼워 넣음 (컴핑)',feel:'칭- 칭기 칭',
+mood:['여유','도시의 밤','세련됨'],genres:['스윙','비밥','빅밴드','재즈풍 OST'],games:['재즈 바·카지노','탐정·누아르','고급 호텔 로비'],
+one:'라이드 심벌이 "칭- 칭기 칭- 칭기"를 반복하고, 하이햇은 발로 2·4박만 닫습니다. 리듬의 중심이 킥·스네어가 아니라 심벌에 있어요.',
+body:['라이드는 1·2·3·4박과, 2·4박 셋잇단의 마지막 칸을 칩니다. 하이햇 페달은 2·4박에 "칙" 하고 닫아서 백비트 역할을 해요. 킥은 들릴 듯 말 듯 매 박 밟는데, 이 주법을 페더링이라고 부릅니다.','재즈 드러머는 스네어와 킥을 정해진 자리에 치지 않고 솔로 연주자에게 반응하면서 끼워 넣습니다. 이것을 컴핑이라고 해요. 예시의 스네어는 한 가지 예일 뿐이니 고정 패턴으로 외우지 마세요.'],
+tips:['실제 재즈 연주에서는 템포가 빠를수록 스윙 비율이 줄어 8분음표에 가까워지는 경향이 있습니다. 이 시퀀서는 항상 정확한 셋잇단으로 치니까, 빠른 곡을 만들 때는 DAW에서 스윙 값을 조금 낮춰 보세요.'],
+refs:[['jazz swing ride pattern lesson','재즈 라이드 패턴 레슨'],['Count Basie Orchestra','카운트 베이시 오케스트라 (스윙 빅밴드)']],
+bars:[{res:3,beats:4,t:{ride:'x..x.xx..x.x',hat:'...x.....x..',snare:'..........g.',kick:'g..g..g..g..'}}]},
+{id:'house',cat:'댄스·전자',name:'하우스',en:'House',bpm:124,range:'약 118~130',grid:'1/16',kick:'매 박 (4 온 더 플로어)',sn:'클랩 2·4박',feel:'일정하게 반복되는 몰입감',
+mood:['몰입','도시적','밤'],genres:['하우스','딥하우스','테크 하우스','EDM'],games:['클럽 맵','메뉴·로비 BGM','꾸미기·패션 콘텐츠'],
+one:'킥 4 온 더 플로어, 2·4박 클랩, 엇박 오픈 하이햇. 디스코의 뼈대를 드럼 머신으로 단단하게 만든 리듬입니다.',
+body:['하우스는 1980년대 시카고 클럽에서 시작된 장르로 알려져 있어요. 디스코의 라이브 드럼 자리를 드럼 머신이 대신하면서 소리가 더 일정하고 기계적으로 바뀌었습니다.','같은 패턴이 길게 반복되기 때문에 변화는 악기를 넣고 빼면서 만듭니다. 메뉴 화면이나 로비처럼 플레이어가 오래 머무는 곳에 쓸 때는, 8마디나 16마디마다 퍼커션을 하나씩 넣고 빼서 지루하지 않게 해 보세요.'],
+tips:['림 칸을 옮겨 보세요. 엇박 림 하나로 그루브가 꽤 달라집니다.','템포를 130 이상으로 올리고 클랩을 빼면 테크노에 가까워져요.'],
+refs:[['house drum pattern tutorial','하우스 드럼 패턴 튜토리얼'],['classic Chicago house','시카고 하우스 검색']],
+bars:[{res:4,t:{ohat:'..x...x...x...x.',shaker:'xgxgxgxgxgxgxgxg',clap:'....X.......X...',rim:'.......x......x.',ekick:'x...x...x...x...'}}]},
+{id:'chip',cat:'댄스·전자',name:'칩튠 드럼',en:'Chiptune Drums',bpm:150,range:'약 120~180',grid:'1/16',kick:'삼각파로 만든 킥',sn:'노이즈 채널 2·4박',feel:'짧고 거칠고 경쾌함',
+mood:['레트로','경쾌함','장난스러움'],genres:['칩튠','레트로 게임음악','비트팝'],games:['레트로 액션','픽셀 아트 게임','미니게임·타이틀 화면'],
+one:'옛날 게임기 사운드 칩으로 흉내 낸 드럼입니다. 소리가 짧고 거칠어요. 기본 탭의 "8비트"(8분음표 비트)와는 다른 개념이니 헷갈리지 마세요.',
+body:['패미컴(NES) 사운드 칩은 펄스파 두 개, 삼각파 하나, 노이즈 하나, 샘플(DPCM) 채널로 이루어져 있습니다. 드럼 전용 채널이 없어서 노이즈 채널로 스네어와 하이햇을 만들고, 음정이 빠르게 떨어지는 삼각파로 킥을 흉내 내는 방법을 많이 썼어요.','노이즈 채널 하나로 스네어와 하이햇을 함께 맡으면 두 소리를 동시에 낼 수 없습니다. 그래서 같은 채널을 쓰는 소리끼리는 겹치지 않게 번갈아 배치해요. 예시에서도 칩 스네어와 칩 햇이 같은 칸에 겹치지 않습니다.'],
+tips:['8비트 패턴과 번갈아 재생해 보세요. 리듬은 비슷해도 음색 때문에 시대가 완전히 달라 보입니다.','실제 칩튠 작업은 FamiTracker 같은 트래커 프로그램이나 칩튠 플러그인으로 해요.'],
+refs:[['NES noise channel drums chiptune','NES 노이즈 채널 드럼 영상'],['FamiTracker drums tutorial','FamiTracker 드럼 튜토리얼']],
+bars:[{res:4,t:{chipH:'x.x...x.x.x...x.',chipS:'....x.......x...',chipK:'x.....x.x.......'}},{res:4,t:{chipH:'x.x...x.x.......',chipS:'....x.......xxxx',chipK:'x.....x.x.x.....'}}]},
+{id:'boombap',cat:'힙합',name:'붐뱁',en:'Boom Bap',bpm:90,swing:57,range:'약 85~95',grid:'1/16 (스윙)',kick:'1박 + 엇박 몇 개',sn:'2·4박, 크고 둔탁하게',feel:'고개가 끄덕여지는 스윙',
+mood:['거리','투박함','레트로 힙합'],genres:['붐뱁 힙합','로파이 힙합','재즈 힙합'],games:['스케이트·스트리트 게임','레트로 도시 탐색','로파이 휴식 BGM'],
+one:'킥 "붐"과 스네어 "뱁"에서 이름이 왔습니다. 90 BPM 근처에서 하이햇에 스윙을 살짝 걸어 고개가 끄덕여지는 리듬을 만들어요.',
+body:['붐뱁은 1990년대 뉴욕을 중심으로 한 이스트코스트 힙합의 대표 리듬으로 알려져 있습니다. 옛 펑크·재즈 레코드에서 드럼 소리를 샘플링해 썼기 때문에 소리가 둔탁하고 거친 편이에요.','예시는 스윙이 57%로 설정되어 있습니다. 스윙을 50%로 내리면 갑자기 뻣뻣해지는 것을 들어 보세요. 로파이 힙합도 같은 뿌리라서, 템포를 75~85로 내리고 소리를 흐리게 만들면 로파이 느낌이 납니다.'],
+tips:['스네어는 2·4박에 고정하고 킥만 옮겨 보세요. 킥 위치만 바꿔도 비트가 여러 개 나옵니다.'],
+refs:[['boom bap drum pattern tutorial','붐뱁 드럼 패턴 튜토리얼'],['90s east coast hip hop beat','90년대 이스트코스트 힙합 검색']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x..x......x.....'}}]},
+{id:'bossa',cat:'월드·라틴',name:'보사노바',en:'Bossa Nova',bpm:110,range:'약 100~140 (곡마다 차이)',grid:'1/16, 2마디 패턴',kick:'매 박 + 직전 16분 (작게)',sn:'림(크로스 스틱) 2마디 패턴',feel:'잔잔하게 흔들림',
+mood:['나른함','세련됨','해변 카페'],genres:['보사노바','라틴 재즈','라운지'],games:['카페·휴양지','요리·경영 시뮬레이션','대기·로딩 화면'],
+one:'스틱을 스네어 위에 눕혀 림을 치는 크로스 스틱으로 2마디짜리 리듬을 반복합니다. 하이햇은 8분음표로 잔잔하게, 킥은 작게 받쳐 줘요.',
+body:['흔히 쓰는 크로스 스틱 패턴은 첫 마디에 1박, 2박 &, 4박을 치고, 둘째 마디에 2박과 3박 &를 칩니다. 예시가 이 패턴이에요. 쿠바 음악의 손 클라베와 비슷해 보이지만 같은 리듬은 아닙니다.','보사노바는 삼바에서 나온 음악이라 킥도 삼바의 큰북(수르두)처럼 "1 (a) 2 (a)" 모양으로 밟습니다. 다만 보사노바는 훨씬 작고 부드럽게 쳐야 해요. 킥이 크게 들리면 바로 삼바처럼 바뀝니다.'],
+tips:['두 마디 순서를 바꿔서 둘째 마디부터 시작하는 방식도 있습니다. 시퀀서에서 두 마디의 림 칸을 서로 바꿔서 들어 보세요.'],
+refs:[['bossa nova drum pattern lesson','보사노바 드럼 레슨 영상'],['Getz Gilberto The Girl from Ipanema','Getz/Gilberto – The Girl from Ipanema']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',rim:'x.....x.....x...',kick:'x..gx..gx..gx..g'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',rim:'....x.....x.....',kick:'x..gx..gx..gx..g'}}]},
+{id:'samba',cat:'월드·라틴',name:'삼바',en:'Samba',bpm:100,range:'4/4로 적으면 약 90~120 (원래는 2/4)',grid:'1/16',kick:'매 박 + 직전 16분 (수르두)',sn:'쉐이커 16분 + 림 장식',feel:'빠르게 들썩임',
+mood:['열정','카니발','에너지'],genres:['삼바','바투카다','라틴 재즈'],games:['카니발·축제 스테이지','스포츠 게임 메뉴','정글 탐험'],
+one:'브라질의 큰북 수르두를 킥으로 옮겨 "1 (a) 2 (a)"로 밟고, 위에서는 쉐이커가 16분음표를 쉬지 않고 채웁니다.',
+body:['삼바는 원래 여러 타악기 연주자가 나눠 치는 음악입니다. 드럼 세트로 칠 때는 그 파트들을 한 사람이 합쳐서 연주하는 셈이에요. 수르두는 1박을 막아서 짧게, 2박을 열어서 길게 치기 때문에 예시 킥도 2·4박을 더 세게 밟습니다.','삼바는 전통적으로 2/4박자로 적습니다. 이 시퀀서는 4/4로 적었기 때문에 2/4 한 마디가 여기서는 2박이에요. 림 칸은 탐보림(작은 손북) 느낌을 낸 예시이고, 실제로는 변형이 아주 많습니다.'],
+tips:['킥의 16분 픽업(a 자리)을 빼 보세요. 삼바다운 느낌이 바로 약해집니다.','보사노바와 번갈아 들어 보세요. 킥 모양은 같은데 세기와 템포에 따라 분위기가 완전히 달라집니다.'],
+refs:[['samba drum set groove lesson','삼바 드럼 세트 레슨'],['batucada samba percussion','바투카다 검색']],
+bars:[{res:4,t:{shaker:'xxxXxxxXxxxXxxxX',rim:'x.x..x.xx.x..x.x',kick:'x..xX..xx..xX..x'}}]},
+{id:'blast',cat:'록·메탈',name:'블라스트 비트',en:'Blast Beat',bpm:190,range:'곡마다 다르며 대체로 매우 빠름',grid:'1/8 (모든 악기 동시)',kick:'8분 연타',sn:'8분 연타',feel:'소리의 벽',
+mood:['극한','혼돈','공포'],genres:['데스 메탈','블랙 메탈','그라인드코어'],games:['광폭화 보스','마계 최심부','공포 연출 클라이맥스'],
+one:'킥, 스네어, 심벌을 모두 8분음표로 한꺼번에 칩니다. 리듬이라기보다 소리가 벽처럼 몰려오는 느낌이에요.',
+body:['블라스트 비트는 모든 드럼을 8분음표로 치는 형태와, 그중 한 악기를 16분음표만큼 밀어 엇갈리게 치는 변형이 있습니다. 엇갈리게 치면 소리가 덜 뭉치고 더 빠르게 들려요.','게임에서는 한 곡 내내 쓰기보다 보스가 광폭화하는 순간처럼 짧게 터뜨릴 때 효과가 큽니다. 투베이스나 하프타임 구간과 번갈아 쓰면 강약이 생겨요.'],
+tips:['스네어 칸을 모두 한 칸 뒤(16분 엇박)로 옮겨서 엇갈린 블라스트 비트를 만들어 보세요.'],
+refs:[['blast beat drum lesson','블라스트 비트 레슨 영상']],
+bars:[{res:4,t:{crash:'x.x.x.x.x.x.x.x.',snare:'x.x.x.x.x.x.x.x.',kick:'x.x.x.x.x.x.x.x.'}}]},
+{id:'cine',cat:'게임·영상',name:'시네마틱 타악',en:'Cinematic Percussion',bpm:100,range:'약 80~140',grid:'1/16',kick:'큰북이 강박',sn:'스네어 오스티나토 + 탐',feel:'거대하고 웅장함',
+mood:['웅장함','긴박감','전쟁'],genres:['트레일러 음악','에픽 오케스트라','하이브리드 스코어'],games:['보스전 오프닝','공성전·전쟁','시네마틱 트레일러','카운트다운 연출'],
+one:'드럼 세트 대신 큰북과 탐 앙상블로 리듬을 만듭니다. 낮은 큰북이 강박을 찍고, 스네어가 같은 리듬을 반복(오스티나토)하면서 긴장을 끌어올려요.',
+body:['게임 트레일러나 보스전에서 들리는 "둥- 둥둥" 하는 소리가 이런 타악 앙상블입니다. 드럼 세트처럼 킥·스네어 역할이 딱 나뉘지 않고, 높이가 다른 북들이 서로 주고받아요.','실제 작업에서는 타이코 같은 큰북 음원과 여러 개의 탐 음원을 겹쳐 씁니다. 이 시퀀서의 큰북은 합성한 소리라 실제 음원보다 가볍게 들리니 리듬 구조만 참고하세요.'],
+tips:['둘째 마디 끝 다음에 오케스트라가 들어온다고 상상하면서 들어 보세요. 타악이 앞 구간을 끌어올리는 역할이 들립니다.','스네어를 끄면 큰북만 남아서 느린 의식 같은 분위기가 됩니다.'],
+refs:[['epic trailer percussion taiko','에픽 트레일러 타악 검색'],['cinematic percussion tutorial','시네마틱 타악 튜토리얼']],
+bars:[{res:4,t:{crash:'X...............',snare:'g.g.g.g.g.g.g.g.',tomH:'........x.x.xxxx',taiko:'X..X..X.X.......'}},{res:4,t:{snare:'g.g.g.g.g.g.g.g.',tomL:'....x...x...x.xx',taiko:'X..X..X.X..X..X.'}}]},
+{id:'march',cat:'게임·영상',name:'마칭 스네어',en:'March',bpm:112,range:'약 100~130',grid:'1/16 + 롤',kick:'매 박 (베이스 드럼)',sn:'악센트와 롤',feel:'절도 있게 행진',
+mood:['위엄','군대','의식'],genres:['행진곡','군악','마칭 밴드'],games:['왕국 성문·열병식','전쟁 준비 화면','훈련·병영 콘텐츠'],
+one:'베이스 드럼이 매 박 "쿵"을 찍고, 스네어가 악센트와 롤로 리듬을 채웁니다. 드럼 세트보다 군악대의 스네어 파트를 떠올리면 돼요.',
+body:['마칭 스네어는 악센트를 정확하게 지키는 것이 중요합니다. 예시 스네어의 밝은 칸이 악센트예요. 악센트만 크게, 나머지는 작게 쳐야 절도 있게 들립니다.','둘째 마디 끝의 "3" 칸은 롤을 흉내 낸 것입니다. 실제 마칭 롤은 스틱을 튕겨서 치는 프레스 롤이나 더블 스트로크 롤이라 더 촘촘하게 이어져요.'],
+tips:['크래시 칸을 끄고 들어 보세요. 2·4박 심벌이 빠지면 의식 같은 무게가 줄어듭니다.'],
+refs:[['military march snare drum cadence','군악 스네어 케이던스 검색'],['snare drum rudiments march','스네어 루디먼트 행진 검색']],
+bars:[{res:4,t:{crash:'....x.......x...',snare:'X.xxX.x.X.xxX.x.',kick:'x...x...x...x...'}},{res:4,t:{crash:'....x.......x...',snare:'X.xxX.xxX.x.3333',kick:'x...x...x...x...'}}]}
+
+];
+const FIL=[
+{id:'f16',name:'16분 후리기',en:'16th-note Fill',bpm:100,stick:'RLRL RLRL',
+one:'16분음표로 RLRL 교대하면서 스네어에서 탐으로 내려갑니다. 가장 기본이 되는 후리기라서 다른 후리기를 배울 때 기준이 돼요.',
+body:['손을 계속 교대하기 때문에 한 손이 다음 탐으로 미리 움직일 수 있습니다. 그래서 스네어 → 하이 탐 → 플로어 탐처럼 높은 음에서 낮은 음으로 내려가는 배치가 자연스러워요.'],
+refs:[['16th note drum fill lesson','16분 필인 레슨 영상']],
+bars:[G8,{res:4,t:{hat:'X.x.X.x.........',snare:'....X...XxXx....',tomH:'............Xx..',tomL:'..............Xx',kick:'x.......x.......'},stick:'........RLRLRLRL'}]},
+{id:'f3',name:'셋잇단 후리기',en:'Triplet Fill',bpm:90,stick:'RLR LRL',
+one:'한 박을 셋으로 나눠 RLR LRL로 칩니다. 16분 후리기보다 둥글게 굴러가는 느낌이 나요.',
+body:['둘째 마디는 그리드가 한 박 3칸으로 바뀝니다. 앞 마디의 16분과 비교하면 후리기가 살짝 느슨하게 들리는데, 그 느슨함 덕분에 셔플이나 6/8박자 곡에서 잘 어울려요.'],
+refs:[['triplet drum fill lesson','셋잇단 필인 레슨 영상']],
+bars:[G8,{res:3,t:{hat:at(12,'0:X 3:x'),snare:at(12,'3:X 6:X 7:x 8:x'),tomH:at(12,'9:X 10:x'),tomL:at(12,'11:X'),kick:at(12,'0:x 6:x')},stick:'......RLRLRL'}]},
+{id:'fflam',name:'플램 후리기',en:'Flam Fill',bpm:96,stick:'R L R L (모두 플램)',
+one:'8분음표 후리기를 모두 플램으로 칩니다. 음 수는 적은데 소리가 두꺼워서 묵직하게 넘어가요.',
+body:['스네어 두 번, 하이 탐, 플로어 탐 순서로 내려가면서 칠 때마다 플램을 붙였습니다. 빠르게 많이 치는 후리기보다 여유 있고 힘 있게 들려서 록 발라드나 미디엄 템포 곡에 잘 맞아요.','플램을 붙이는 손을 번갈아 바꾸면(오른손 플램, 왼손 플램) 탐 이동이 편해집니다.'],
+refs:[['flam drum fill lesson','플램 필인 레슨 영상']],
+bars:[G8,{res:4,t:{hat:'X.x.X.x.........',snare:'....X...f.f.....',tomH:'............f...',tomL:'..............f.',kick:'x.......x.......'},stick:'........R.L.R.L.'}]},
+{id:'ftom',name:'탐 돌리기',en:'Tom Round (16th)',bpm:100,stick:'RLRL RLRL RLRL RLRL',
+one:'한 마디를 통째로 16분음표 후리기로 채웁니다. 스네어에서 하이 탐, 미드 탐, 플로어 탐까지 한 박씩 내려가요.',
+body:['한 박마다 북을 하나씩 옮기기 때문에 음높이가 계단처럼 내려가는 게 또렷하게 들립니다. 곡의 큰 구간이 바뀔 때, 예를 들어 1절에서 후렴으로 넘어갈 때 많이 씁니다.','손이 계속 교대하니까 R이 먼저 다음 북으로 옮겨 가면 이동이 자연스러워요.'],
+refs:[['16th note tom fill around the kit','탐 돌리기 필인 영상']],
+bars:[G8,{res:4,t:{snare:'XxxxX...........',tomH:'....Xxxx........',tomM:'........Xxxx....',tomL:'............Xxxx',kick:'x...x...x...x...'},stick:'RLRLRLRLRLRLRLRL'}]},
+{id:'funis',name:'킥·스네어 유니즌',en:'Kick + Snare Unison Fill',bpm:150,stick:'손발 동시 16분',
+one:'스네어와 킥을 16분음표로 동시에 칩니다. 메탈이나 하드록에서 손발을 함께 써서 벽처럼 몰아치는 후리기예요.',
+body:['손만으로 치는 후리기보다 저음이 꽉 차서 훨씬 무겁게 들립니다. 마지막 박은 탐으로 옮겨서 크래시로 이어지게 했어요.','템포가 빠를수록 정확하게 맞추기 어렵습니다. 미디로 찍을 때는 손과 발의 벨로시티를 모두 크게 두되, 킥이 스네어에 묻히지 않는지 꼭 확인하세요.'],
+refs:[['metal unison drum fill','메탈 유니즌 필인 영상']],
+bars:[{res:4,t:{crash:'X...............',ride:'..x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'xxxxxxxxxxxxxxxx'}},{res:4,t:{crash:'X...............',snare:'....X...XxXx....',tomL:'............XxXx',kick:'xxxxxxxxxxxxxxxx'},stick:'........RLRLRLRL'}]},
+{id:'fbuild',name:'스네어 롤 빌드업',en:'Snare Roll Build-up (EDM)',bpm:128,stick:'8분 → 16분 → 32분',
+one:'스네어를 8분음표에서 16분, 32분으로 점점 촘촘하게 치면서 긴장을 끌어올립니다. EDM에서 드롭 직전에 쓰는 대표적인 연출이에요.',
+body:['첫 마디는 8분음표를 작게 시작해서 점점 세게, 둘째 마디는 앞 두 박을 16분, 뒤 두 박을 32분(한 칸에 두 번)으로 칩니다. 마디가 끝나는 순간 크래시와 함께 드롭이 들어온다고 생각하고 들어 보세요.','게임에서는 카운트다운, 보스 등장 직전, 결과 화면 직전처럼 "곧 뭔가 터진다"는 신호로 쓰기 좋습니다. 실제 작업에서는 롤과 함께 하이패스 필터나 음정 상승 효과를 같이 걸어요.'],
+refs:[['edm snare roll build up tutorial','EDM 스네어 롤 빌드업 튜토리얼']],
+bars:[{res:4,t:{crash:'X...............',snare:'g.g.g.g.x.x.x.x.',ekick:'x...x...x...x...'}},{res:4,t:{snare:'xxxxxxxx22222222',ekick:'x...x...x...x...'}}]}
+
+];
+const TEC=[
+{id:'t-ghost',name:'고스트 노트',en:'Ghost Note',bpm:92,mark:'어두운 칸 (g)',use:'펑크, 16비트, 퍼디 셔플, 드럼앤베이스',
+one:'들릴 듯 말 듯 아주 작게 치는 음입니다. 크게 치는 백비트 사이를 채워서 그루브를 만들어요.',
+body:['첫 마디는 고스트 없이 백비트만, 둘째 마디는 고스트를 넣은 버전입니다. 같은 리듬인데 둘째 마디가 훨씬 끈적하고 굴러가는 느낌이 나요.','미디로 찍을 때 고스트는 벨로시티 20~40 정도로 아주 작게 주세요. 고스트가 크면 그냥 시끄러운 스네어 연타가 됩니다.'],
+tips:['둘째 마디 고스트를 하나씩 지워 가며, 어느 고스트가 그루브에 가장 큰 영향을 주는지 찾아보세요.'],
+refs:[['ghost notes drum lesson','고스트 노트 레슨 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.....x...x.....'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'..g.X..g.g.gX..g',kick:'x.....x...x.....'}}]},
+{id:'t-swing',name:'스윙 (8분 기준과 16분 기준)',en:'Swing: 8th vs 16th',bpm:92,swing:63,mark:'스윙 슬라이더 + 8분·16분 버튼',use:'8분: 셔플·재즈·블루스 / 16분: 붐뱁·뉴잭스윙·펑크·UK 개러지',
+one:'스윙은 짝을 이루는 두 음 중 뒤의 음을 늦게 쳐서 출렁이게 만드는 것입니다. 어느 음표를 짝으로 보느냐에 따라 8분 기준과 16분 기준으로 나뉘어요.',
+body:['8분 기준은 8분음표 두 개를 한 짝으로 봅니다. 그래서 & 자리가 크게 뒤로 밀리고, 셔플이나 재즈처럼 박 단위로 크게 출렁여요. 16분 기준은 16분음표 두 개를 한 짝으로 봅니다. & 자리는 제자리에 있고 e와 a만 밀려서, 박 안에서 잘게 튀는 힙합·펑크 그루브가 됩니다.','예시는 하이햇이 16분이고 킥이 & 자리에 들어가 있어서 두 기준의 차이가 잘 들리게 짰습니다. 재생해 둔 채로 8분과 16분 버튼을 번갈아 눌러 보세요. 그리드에서 밀리는 칸이 오른쪽으로 움직이는 것도 같이 보세요.','8비트처럼 하이햇이 8분음표뿐인 패턴은 16분 기준으로 바꾸면 밀릴 음이 없어서 정박과 똑같이 들립니다. 패턴을 고르면 기준이 자동으로 정해지는 것도 그래서예요.'],
+tips:['스윙 값을 58%, 63%, 67%로 바꿔 가며 들어 보세요. 67% 근처가 셋잇단과 같은 2:1 비율입니다.','DAW에서도 스윙(그루브) 설정에 1/8, 1/16 기준을 고르는 칸이 있으니 같은 원리로 맞춰 보세요.'],
+refs:[['8th vs 16th note swing explained','8분·16분 스윙 비교 영상'],['MPC swing 16th explained','MPC 16분 스윙 설명 영상']],
+bars:[{res:4,t:{hat:'XxxxXxxxXxxxXxxx',snare:'....X.......X...',kick:'x.x...x...x..x..'}}]},
+{id:'t-human',name:'기계처럼 vs 사람처럼',en:'Quantized vs Humanized',bpm:96,mark:'"사람처럼 치기" 슬라이더',use:'어쿠스틱 드럼을 미디로 찍는 모든 작업',
+one:'미디로 찍은 드럼이 기계처럼 들리는 이유는 모든 음이 똑같은 세기로, 정확히 같은 간격으로 나오기 때문입니다. 실제 드러머는 그렇게 치지 못하고, 그렇게 치지도 않아요.',
+body:['예시는 일부러 모든 음을 같은 세기(보통)로 찍었습니다. "사람처럼 치기"를 0에 두고 들으면 하이햇 16분이 다다다다 똑같이 찍히는 기관총 소리가 납니다. 슬라이더를 60~80으로 올리고 다시 들어 보세요.','슬라이더를 올리면 세 가지가 바뀝니다. 첫째, 음마다 타이밍과 세기가 조금씩 흔들립니다. 둘째, 하이햇은 정박을 세게, 16분 엇박을 약하게 칩니다. 실제 드러머가 하이햇을 칠 때 자연스럽게 생기는 강약이에요. 셋째, 스네어 백비트가 아주 살짝 늦게 들어가서 리듬에 여유가 생깁니다.','100까지 올리면 오히려 서툰 연주처럼 들립니다. 실제 작업에서도 휴머나이즈는 조금만 거는 게 기본이고, 세기는 손으로 다듬는 경우가 많아요.'],
+tips:['DAW의 휴머나이즈(랜덤화) 기능도 같은 원리입니다. 타이밍은 5~15ms, 벨로시티는 10% 안쪽에서 시작해 보세요.','전자음악(트랩의 808, EDM 킥 등)은 정확한 타이밍이 장르의 특징이라 이 기능을 적용하지 않습니다.'],
+refs:[['humanize midi drums tutorial','미디 드럼 휴머나이즈 튜토리얼']],
+bars:[{res:4,t:{hat:'xxxxxxxxxxxxxxxx',snare:'....x.......x...',kick:'x.......x.x.....'}}]},
+{id:'t-accent',name:'악센트',en:'Accent',bpm:100,mark:'밝은 테두리 칸 (X)',use:'모든 스타일, 특히 하이햇과 마칭 스네어',
+one:'특정 음만 세게 쳐서 리듬의 모양을 만드는 주법입니다. 같은 8분음표라도 어디에 악센트를 주느냐에 따라 느낌이 달라져요.',
+body:['첫 마디는 하이햇을 모두 같은 세기로, 둘째 마디는 정박에만 악센트를 줬습니다. 둘째 마디가 훨씬 사람이 친 것처럼 들려요.','엇박에 악센트를 주면 디스코처럼 튀는 느낌이 나고, 정박에 주면 단단하게 걷는 느낌이 납니다. 하이햇 칸을 눌러 악센트 위치를 바꿔 보세요.'],
+tips:['하이햇 악센트를 엇박(&)으로 옮겨서 정박 악센트와 비교해 보세요.'],
+refs:[['hi hat accents drum lesson','하이햇 악센트 레슨 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{hat:'X.x.X.x.X.x.X.x.',snare:'....X.......X...',kick:'x.......x.......'}}]},
+{id:'t-flam',name:'플램',en:'Flam',bpm:84,mark:'f',use:'후리기, 마칭, 펑크 백비트, 시네마틱 타악',
+one:'작은 꾸밈음 하나를 본음 바로 앞에 붙여 "트락" 하고 두껍게 들리게 하는 주법입니다. 두 손이 거의 동시에 떨어지되, 한 손이 아주 살짝 먼저 칩니다.',
+body:['첫 마디는 일반 스네어, 둘째 마디는 같은 자리를 플램으로 쳤습니다. 플램은 한 번 친 것보다 소리가 넓고 묵직하게 들려요.','미디로 찍을 때는 본음보다 약 10~30ms 앞에, 벨로시티를 절반 이하로 낮춘 꾸밈음을 하나 넣으면 됩니다.'],
+tips:['백비트를 플램으로 바꿔 보세요. 같은 2·4박인데 훨씬 무게가 실립니다.'],
+refs:[['flam rudiment drum lesson','플램 루디먼트 레슨 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....f.......f.f.',kick:'x.......x.......'}}]},
+{id:'t-drag',name:'드래그 (러프)',en:'Drag · Ruff',bpm:84,mark:'d',use:'마칭, 재즈, 블루스, 후리기',
+one:'꾸밈음 두 개를 본음 앞에 붙여 "드르락" 하고 끌리는 소리를 내는 주법입니다.',
+body:['플램이 꾸밈음 하나라면 드래그는 두 개입니다. 꾸밈음은 같은 손으로 빠르게 두 번 튕겨서 쳐요. 마칭 스네어나 재즈에서 리듬에 장식을 넣을 때 자주 씁니다.','둘째 마디 4박에 드래그를 넣었습니다. 백비트 앞을 살짝 끌어 주는 것만으로 리듬이 한층 노련하게 들려요.'],
+tips:['드래그 위치를 백비트 바로 앞 엇박으로 옮겨 보세요.'],
+refs:[['drag ruff rudiment lesson','드래그 루디먼트 레슨 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....d.......d...',kick:'x.......x.......'}}]},
+{id:'t-buzz',name:'버즈 롤 (프레스 롤)',en:'Buzz · Press Roll',bpm:80,mark:'z',use:'마칭, 오케스트라 스네어, 크레셴도, 빌드업',
+one:'스틱을 헤드에 눌러 여러 번 튕기게 해서 "즈르르" 하고 이어지는 소리를 내는 주법입니다.',
+body:['한 번 치는 음이 아니라 스틱이 튕기는 소리가 촘촘히 붙어서 하나의 긴 소리처럼 들립니다. 오케스트라 스네어나 마칭에서 긴장을 끌어올릴 때 많이 써요.','둘째 마디 3·4박을 버즈 롤로 채웠습니다. 게임에서 보상 상자가 열리기 직전이나 결과 발표 직전에 쓰면 효과가 좋아요.'],
+tips:['버즈 롤 칸을 몇 개 지워서 롤의 길이를 바꿔 보세요.'],
+refs:[['buzz roll press roll snare lesson','버즈 롤 레슨 영상']],
+bars:[{res:4,t:{snare:'X...x...X...x...',kick:'x...x...x...x...'}},{res:4,t:{crash:'............X...',snare:'X...x...zzzz.zzz',kick:'x...x...x...x...'}}]},
+{id:'t-para',name:'파라디들',en:'Paradiddle (RLRR LRLL)',bpm:96,mark:'스틱킹 RLRR LRLL',use:'그루브 응용, 후리기, 리니어 패턴',
+one:'"RLRR LRLL"로 치는 기본 루디먼트입니다. 싱글 스트로크(RL)와 더블 스트로크(RR)가 섞여 있어요.',
+body:['예시는 오른손(R)을 하이햇에, 왼손(L)을 스네어에 둔 파라디들 그루브입니다. 손이 번갈아 가지 않고 같은 손이 두 번 치는 자리가 생겨서, 일반 16비트와 다른 독특한 굴곡이 생겨요.','각 묶음 첫 음에 악센트를 주면 리듬이 더 또렷하게 들립니다. 손을 탐으로 옮기면 그대로 후리기가 돼요.'],
+tips:['오른손 칸을 탐으로 옮겨서 파라디들 후리기로 바꿔 보세요.'],
+refs:[['paradiddle groove drum lesson','파라디들 그루브 레슨 영상']],
+bars:[{res:4,stick:'RLRRLRLLRLRRLRLL',t:{hat:'X.xx.x..X.xx.x..',snare:'.g..X.gg.g..X.gg',kick:'x.......x.......'}}]},
+{id:'t-rim',name:'림샷과 크로스 스틱',en:'Rimshot · Cross-stick',bpm:96,mark:'림샷 줄 / 림 줄',use:'하드록(림샷), 보사노바·발라드(크로스 스틱)',
+one:'둘 다 스네어 테두리(림)를 쓰지만 소리가 정반대입니다. 림샷은 헤드와 림을 동시에 때려 "깡!" 하고 크게, 크로스 스틱은 스틱을 눕혀 림만 "똑" 하고 작게 칩니다.',
+body:['첫 마디는 일반 스네어, 둘째 마디는 림샷, 셋째 마디는 크로스 스틱으로 같은 백비트를 쳤습니다. 같은 자리인데 음색만으로 곡의 크기가 달라져요.','발라드 1절은 크로스 스틱, 후렴은 일반 스네어나 림샷으로 바꾸는 식으로 곡의 흐름에 따라 음색을 바꾸는 경우가 많습니다.'],
+tips:['게임 BGM을 만들 때 루프 앞부분은 크로스 스틱, 전투가 격해지면 림샷으로 바꾸는 식으로 써 보세요.'],
+refs:[['rimshot vs cross stick snare','림샷과 크로스 스틱 비교 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.x.....'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',rshot:'....X.......X...',kick:'x.......x.x.....'}},{res:4,t:{hat:'x.x.x.x.x.x.x.x.',rim:'....X.......X...',kick:'x.......x.x.....'}}]},
+{id:'t-hat',name:'하이햇 주법',en:'Hi-hat: Closed · Half · Open · Pedal',bpm:100,mark:'하이햇 / 하프 오픈 / 오픈 / 페달 줄',use:'모든 스타일',
+one:'하이햇은 페달을 얼마나 밟느냐에 따라 소리가 네 가지로 바뀝니다. 꽉 닫으면 "칫", 반쯤 열면 "치-", 활짝 열면 "치이-", 발로만 밟으면 "칙".',
+body:['첫 마디는 닫힌 하이햇, 둘째 마디는 하프 오픈, 셋째 마디는 엇박 오픈, 넷째 마디는 페달 하이햇으로 2·4박을 밟았습니다. 같은 리듬에서 하이햇 음색만 바뀌는 차이를 들어 보세요.','오픈 하이햇은 다음 닫힌 하이햇이 나오면 소리가 끊깁니다. 실제 하이햇도 페달을 닫으면 소리가 멈추니까, 미디로 찍을 때도 오픈 하이햇 뒤에 닫힌 하이햇을 둬서 끊어 주세요.'],
+tips:['하프 오픈은 하드록·펑크록에서, 페달 하이햇은 재즈와 발라드에서 많이 씁니다.'],
+refs:[['hi hat techniques open half closed foot','하이햇 주법 레슨 영상']],
+bars:[{res:4,t:{hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{hhalf:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{hat:'x...x...x...x...',ohat:'..x...x...x...x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{ride:'x.x.x.x.x.x.x.x.',hpedal:'....x.......x...',snare:'....X.......X...',kick:'x.......x.......'}}]},
+{id:'t-cym',name:'심벌 주법',en:'Crash · Choke · Splash · China · Ride Bell',bpm:100,mark:'크래시 / 초크 / 스플래시 / 차이나 / 라이드 벨 줄',use:'구간 전환, 강조, 엔딩',
+one:'심벌은 종류와 치는 법에 따라 역할이 다릅니다. 크래시는 구간 시작, 초크는 뚝 끊는 강조, 스플래시는 짧은 장식, 차이나는 거친 강조, 라이드 벨은 또렷한 박 찍기에 써요.',
+body:['첫 마디는 크래시와 초크(치자마자 손으로 잡아서 끊기), 둘째 마디는 스플래시와 차이나, 셋째 마디는 라이드 몸통과 라이드 벨을 번갈아 쳤습니다.','게임음악에서는 크래시 초크가 특히 쓸모 있습니다. 컷신이 딱 끊기는 순간이나 "일시정지" 같은 연출에 맞춰 심벌을 끊으면 화면과 소리가 함께 멈춰요.'],
+tips:['라이드 벨은 라틴 음악이나 메탈 그루브에서 카우벨처럼 박을 찍는 데 많이 씁니다.'],
+refs:[['cymbal choke technique','심벌 초크 영상'],['ride bell vs bow','라이드 벨 비교 영상']],
+bars:[{res:4,t:{crash:'X...............',choke:'........X.......',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{splash:'....X...........',china:'............X...',hat:'x.x.x.x.x.x.x.x.',snare:'....X.......X...',kick:'x.......x.......'}},{res:4,t:{ride:'x.x.....x.x.....',bell:'....x.x.....x.x.',snare:'....X.......X...',kick:'x.......x.......'}}]}
+];
+const GLOSS=[
+{id:'w-backbeat',name:'백비트',en:'Backbeat',def:'2·4박에 들어가는 스네어나 클랩을 말합니다. 록, 팝, 힙합처럼 대중음악 대부분이 백비트 위에서 움직여요. 백비트 위치를 3박으로 옮기면 하프타임이 됩니다.',see:['s-eight','s-half','s-motown']},
+{id:'w-fotf',name:'4 온 더 플로어',en:'Four on the floor',aka:['포 온 더 플로어'],def:'킥을 1·2·3·4박마다 빠짐없이 치는 패턴입니다. 디스코에서 시작해 하우스, 테크노 같은 댄스 음악의 기본이 됐어요. 킥이 정박을 모두 채우니까 리듬의 변화는 하이햇과 퍼커션이 맡습니다.',see:['s-disco','s-house','s-techno','s-soca']},
+{id:'w-sync',name:'싱코페이션',en:'Syncopation',aka:['당김음'],def:'강한 박이 아닌 엇박에 음이나 악센트를 둬서 리듬의 무게를 옮기는 것입니다. 킥을 정박 대신 엇박에 넣으면 리듬이 앞으로 쏠리는 느낌이 나요.',see:['s-sixteen','s-breakbeat','s-dembow']},
+{id:'w-onoff',name:'정박과 엇박',en:'Downbeat · Offbeat',aka:['정박','엇박'],def:'정박은 1·2·3·4박이 시작되는 자리, 엇박은 박과 박 사이(&, e, a)를 말합니다. 같은 하이햇도 정박에 악센트를 주면 단단하게, 엇박에 주면 튀는 느낌으로 들려요.',see:['how','s-t-accent']},
+{id:'w-triplet',name:'셋잇단',en:'Triplet',aka:['셋잇단음표','3연음'],def:'한 박을 셋으로 똑같이 나눈 음표입니다. 8분 셋잇단은 DAW에서 1/8T 그리드로 찍어요. 셔플, 12/8 발라드, 스윙이 셋잇단을 바탕으로 합니다.',see:['how','s-shuffle','s-b128','s-f3']},
+{id:'w-compound',name:'복합 박자',en:'Compound meter',def:'6/8, 12/8처럼 큰 박 하나가 8분음표 셋으로 나뉘는 박자입니다. 6/8은 큰 박이 둘, 12/8은 넷이에요. 템포를 적을 때는 보통 점4분음표(셋씩 묶은 큰 박)를 기준으로 합니다.',see:['s-six8','s-b128']},
+{id:'w-odd',name:'홀수 박자',en:'Odd meter',aka:['변박'],def:'5/4, 7/8처럼 한 마디가 2박이나 3박 묶음으로 딱 나눠떨어지지 않는 박자입니다. 3+2, 2+2+3처럼 작은 묶음으로 나눠 세면 훨씬 쉬워져요.',see:['s-five4','s-seven8']},
+{id:'w-fill',name:'후리기',en:'Fill-in',aka:['필인','필'],def:'리듬을 치다가 마디 끝에서 드럼을 몰아친 뒤 다음 구간 첫 박에 크래시를 치는 연주입니다. 현장에서는 "후리기"라고 많이 불러요. 게임음악에서는 루프가 처음으로 돌아갈 때나 전투 페이즈가 바뀔 때 이음새 역할을 합니다.',see:['fills','s-f16','s-ftom']},
+{id:'w-rudiment',name:'루디먼트',en:'Rudiment',def:'스네어 연주의 기본 손 기술 모음입니다. 플램, 드래그, 파라디들, 각종 롤이 모두 루디먼트예요. 드러머는 루디먼트를 조합해서 그루브와 후리기를 만듭니다.',see:['s-t-flam','s-t-drag','s-t-para','s-t-buzz']},
+{id:'w-sticking',name:'스틱킹',en:'Sticking',def:'어느 손으로 어떤 순서로 칠지 적은 것입니다. R은 오른손, L은 왼손, K는 킥(발)이에요. 같은 리듬도 스틱킹에 따라 악센트 위치와 탐 이동이 달라집니다.',see:['fills','s-t-para']},
+{id:'w-ostinato',name:'오스티나토',en:'Ostinato',def:'같은 리듬을 계속 반복하는 것입니다. 시네마틱 타악에서 스네어나 탐이 같은 리듬을 반복하면서 긴장을 쌓을 때 많이 써요.',see:['s-cine']},
+{id:'w-velocity',name:'벨로시티',en:'Velocity',def:'미디에서 음을 얼마나 세게 쳤는지 나타내는 값입니다(0~127). 드럼을 미디로 찍을 때는 악센트, 보통, 고스트처럼 벨로시티 차이를 줘야 기계 소리처럼 들리지 않아요.',see:['s-t-accent','s-t-ghost','s-t-human']},
+{id:'w-quantize',name:'퀀타이즈',en:'Quantize',def:'음의 위치를 그리드에 정확히 맞추는 기능입니다. 연주를 녹음한 뒤 박이 어긋난 음을 정리할 때 써요. 너무 딱 맞추면 사람 느낌이 사라지니까 일부만 맞추는 경우도 많습니다.',see:['s-t-human']},
+{id:'w-humanize',name:'휴머나이즈',en:'Humanize',def:'타이밍과 벨로시티를 조금씩 흐트러뜨려 사람이 친 것처럼 만드는 기능입니다. 이 시퀀서의 "사람처럼 치기" 슬라이더가 같은 역할을 해요.',see:['s-t-human']},
+{id:'w-bpm',name:'BPM',en:'Beats per minute',aka:['템포'],def:'1분에 박이 몇 개 들어가는지 나타내는 템포 단위입니다. 다만 하프타임 리듬은 표기 BPM보다 절반 속도로 느껴지니까, 숫자와 체감 속도를 같이 확인하세요.',see:['s-half','s-trap']},
+{id:'w-grid',name:'그리드',en:'Grid',def:'DAW 피아노롤에서 음을 찍는 칸 단위입니다. 16분음표 리듬은 1/16, 셋잇단은 1/8T, 6연음은 1/16T로 맞춰요. 스타일에 맞지 않는 그리드로 찍으면 음 위치를 정확히 넣을 수 없습니다.',see:['how']},
+{id:'w-oneshot',name:'원샷 샘플',en:'One-shot sample',def:'한 번 친 소리만 담긴 짧은 오디오 파일입니다. 킥 한 번, 스네어 한 번처럼요. 이 자료의 샘플 불러오기에는 원샷 샘플을 써야 합니다.',see:['samp']},
+{id:'w-break',name:'드럼 브레이크',en:'Drum break',def:'옛 펑크·소울 곡에서 다른 악기가 빠지고 드럼만 나오는 구간입니다. 힙합, 브레이크비트, 정글, 드럼앤베이스가 이런 구간을 샘플링해서 리듬을 만들었어요.',see:['s-breakbeat','s-jungle','s-dnb','s-boombap']},
+{id:'w-808',name:'808',en:'TR-808',def:'롤랜드 드럼 머신 TR-808에서 이름이 온 소리입니다. 특히 길게 울리는 808 킥은 음정이 있어서 트랩에서 킥과 베이스를 함께 맡아요.',see:['s-trap']},
+{id:'w-gated',name:'게이트 리버브',en:'Gated reverb',def:'스네어에 큰 잔향을 건 뒤 게이트로 꼬리를 뚝 잘라낸 소리입니다. 1980년대 팝과 록에서 크게 유행했고, 신스웨이브에서 그 시절 느낌을 낼 때 써요.',see:['s-synthwave']},
+{id:'w-clave',name:'클라베',en:'Clave',def:'라틴 음악에서 모든 파트가 기준으로 삼는 두 마디짜리 리듬이자, 그 리듬을 치는 나무 막대 악기 이름입니다. 3-2 클라베는 첫 마디에 세 번, 둘째 마디에 두 번 칩니다.',see:['s-sonclave','s-bossa']},
+{id:'w-polymeter',name:'폴리미터',en:'Polymeter',def:'길이가 다른 패턴이 동시에 돌아가는 것입니다. 젠트에서 16분 3칸 묶음 킥이 4/4 스네어와 계속 어긋나는 것이 대표적인 예예요.',see:['s-djent']},
+{id:'w-feather',name:'페더링',en:'Feathering',def:'재즈에서 킥을 아주 작게 매 박 밟는 주법입니다. 거의 들리지 않지만 베이스와 함께 박을 받쳐 줘요.',see:['s-swing']},
+{id:'w-comping',name:'컴핑',en:'Comping',def:'재즈에서 정해진 패턴 없이 솔로 연주에 반응하면서 스네어나 킥을 끼워 넣는 반주입니다. 그래서 재즈 드럼은 고정 패턴으로 외우기보다 들으면서 익혀야 해요.',see:['s-swing']},
+{id:'w-hhroll',name:'하이햇 롤',en:'Hi-hat roll',def:'하이햇을 32분음표나 그보다 빠르게 잘게 굴리는 것입니다. 트랩의 대표적인 특징이에요. 마디 끝이나 클랩 직전처럼 위치를 정해서 넣어야 정신없지 않습니다.',see:['s-trap','s-dubstep']},
+{id:'w-vlayer',name:'벨로시티 레이어',en:'Velocity layer',def:'샘플 음원에서 같은 악기를 세기별로 따로 녹음해 둔 것입니다. 세게 칠 때와 약하게 칠 때 음색까지 달라져서, 벨로시티만 바꿔도 실제 연주에 가까워져요.',see:['s-t-ghost','s-t-accent']}
+];
+const SEC={fills:'후리기 모음',how:'그리드 읽는 법',samp:'샘플 불러오기',practice:'연습 방법'};
+const ALL=[...STY,...TEC,...FIL];
+const byId=id=>ALL.find(s=>s.id===id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- audio ---------- */
+let ctx=null,dryBus=null,wetGain=null,conv=null,noise=null,noise2=null,openG=[];
+const buses={},SAMP={},SNAME={},curves={};
+const PAN={hat:-.3,hhalf:-.3,ohat:-.3,hpedal:-.3,crash:-.38,choke:-.38,splash:-.2,china:.45,ride:.4,bell:.4,tomH:-.18,tomM:.1,tomL:.35,tamb:.2,cowbell:.25,block:-.2,shaker:.15};
+const WET={snare:.2,rshot:.28,gsnare:.7,clap:.3,tomH:.24,tomM:.24,tomL:.26,taiko:.42,crash:.16,choke:.16,china:.16,splash:.16,ride:.1,bell:.1,kick:.08,ekick:.05,hkick:.06,b808:.02,chipK:0,chipS:0,chipH:0,rim:.16,block:.16,cowbell:.12,tamb:.12,shaker:.08};
+const ELEC=new Set(['ekick','hkick','b808','chipK','chipS','chipH']);
+function makeIR(sec){const sr=ctx.sampleRate,n=Math.floor(sr*sec),b=ctx.createBuffer(2,n,sr);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++){const tt=i/sr;const er=(tt<.08&&Math.random()<.004)?(Math.random()*2-1)*1.5:0;d[i]=((Math.random()*2-1)*Math.pow(1-i/n,2.6)*Math.exp(-tt*2.2)+er)*(tt<.006?tt/.006:1)}}return b}
+const wetAmt=()=>4*S.room/100,dryAmt=()=>1-.3*S.room/100,irLen=()=>.5+2.5*S.room/100;
+const roomName=r=>r<1?'울림 없음':r<25?'작은 방':r<55?'스튜디오':r<80?'홀':'큰 홀';
+function initAudio(){
+  if(ctx)return;
+  const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-12;comp.ratio.value=3;comp.attack.value=.004;comp.release.value=.15;
+  const out=ctx.createGain();out.gain.value=.9;comp.connect(out).connect(ctx.destination);
+  dryBus=ctx.createGain();dryBus.connect(comp);dryBus.gain.value=dryAmt();
+  conv=ctx.createConvolver();conv.buffer=makeIR(irLen());wetGain=ctx.createGain();wetGain.gain.value=wetAmt();conv.connect(wetGain).connect(comp);
+  const len=ctx.sampleRate;noise=ctx.createBuffer(1,len,ctx.sampleRate);const d=noise.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+  noise2=ctx.createBuffer(1,len,ctx.sampleRate);const d2=noise2.getChannelData(0);const hold=Math.max(1,Math.round(ctx.sampleRate/7000));let v=1;for(let i=0;i<len;i++){if(i%hold===0)v=Math.random()<.5?-1:1;d2[i]=v*.8}
+}
+function bus(k){
+  if(buses[k])return buses[k];
+  const inp=ctx.createGain();let node=inp;
+  if(ctx.createStereoPanner&&PAN[k]){const p=ctx.createStereoPanner();p.pan.value=PAN[k];inp.connect(p);node=p}
+  node.connect(dryBus);const s=ctx.createGain();s.gain.value=WET[k]===undefined?.12:WET[k];node.connect(s);s.connect(conv);
+  return buses[k]=inp;
+}
+function shaper(k){if(curves[k])return curves[k];const c=new Float32Array(512);for(let i=0;i<512;i++){const x=i/256-1;c[i]=Math.tanh(x*k)/Math.tanh(k)}return curves[k]=c}
+function E(t,peak,att,dec){const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(Math.max(peak,0),t+att);g.gain.setTargetAtTime(0,t+att,Math.max(dec,.003)/4);return g}
+function NZ(t,dur,d,peak,att,dec,filters,buf){const s=ctx.createBufferSource();s.buffer=buf||noise;let n=s;(filters||[]).forEach(([type,f,q])=>{const b=ctx.createBiquadFilter();b.type=type;b.frequency.value=f;if(q)b.Q.value=q;n.connect(b);n=b});const g=E(t,peak,att,dec);n.connect(g).connect(d);s.start(t,Math.random()*.5);s.stop(t+dur);return g}
+function OS(t,d,type,f0,f1,fdur,peak,att,dec,ws){const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,t);if(f1)o.frequency.exponentialRampToValueAtTime(f1,t+fdur);const g=E(t,peak,att,dec);if(ws){const w=ctx.createWaveShaper();w.curve=shaper(ws);o.connect(w).connect(g)}else o.connect(g);g.connect(d);o.start(t);o.stop(t+att+dec*1.3+.02);return g}
+const FR=[205.3,304.4,369.6,522.7,540,800];
+function METAL(t,d,v,o){const sc=o.sc||1,att=o.att||.001,dec=o.dec;const sum=ctx.createGain();sum.gain.value=.16;FR.forEach(f=>{const x=ctx.createOscillator();x.type='square';x.frequency.value=f*sc*(1+(Math.random()-.5)*.01);x.connect(sum);x.start(t);x.stop(t+att+dec*1.3+.05)});
+  const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=o.bp;bp.Q.value=.6;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=o.hp;let n=bp;sum.connect(bp).connect(hp);n=hp;
+  if(o.ws){const w=ctx.createWaveShaper();w.curve=shaper(o.ws);hp.connect(w);n=w}
+  const g=E(t,v,att,dec);n.connect(g).connect(d);
+  const g2=NZ(t,att+dec*1.3+.05,d,v*(o.nz||.35),att,dec*(o.nzd||.8),[['highpass',o.hp+1500]]);return [g,g2]}
+function cut(gs,t){gs.forEach(g=>{g.gain.cancelScheduledValues(t);g.gain.setTargetAtTime(0,t,.012)})}
+const rr=()=>S.human?1+(Math.random()-.5)*.05*S.human/100:1;
+const INST={
+  kick:(t,v,d)=>{const f0=(90+50*v)*rr();OS(t,d,'sine',f0,50,.1,v,.002,.45,1.4);OS(t,d,'sine',62,0,0,v*.35,.004,.25);NZ(t,.03,d,v*.32,.0008,.016,[['bandpass',3200,.8]]);OS(t,d,'sine',1600,0,0,v*.1,.0005,.01)},
+  snare:(t,v,d)=>{const r=rr();[[185,.5,.12],[330,.24,.08],[465,.1,.05]].forEach(([f,a,dc])=>OS(t,d,'sine',f*1.08*r,f*r,.02,v*a,.001,dc));NZ(t,.4,d,v*.65,.001,.17+.09*v,[['highpass',1800],['peaking',5000,.8]]);NZ(t,.05,d,v*.3,.0005,.02,[['highpass',6000]])},
+  rshot:(t,v,d)=>{INST.snare(t,v*1.08,d);OS(t,d,'triangle',920*rr(),0,0,v*.35,.0005,.03);NZ(t,.05,d,v*.55,.0005,.03,[['bandpass',3500,1.2]])},
+  gsnare:(t,v,d)=>{INST.snare(t,v,d);const s=ctx.createBufferSource();s.buffer=noise;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=2600;f.Q.value=.5;const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*.42,t+.004);g.gain.setValueAtTime(v*.36,t+.22);g.gain.linearRampToValueAtTime(0,t+.235);s.connect(f).connect(g).connect(d);s.start(t,Math.random()*.5);s.stop(t+.3)},
+  clap:(t,v,d)=>{[0,.009,.019].forEach(o=>NZ(t+o,.03,d,v*1.2,.0005,.01,[['bandpass',1150,.9]]));NZ(t+.027,.35,d,v*1.05,.001,.2,[['bandpass',1150,.9]])},
+  rim:(t,v,d)=>{const r=rr();OS(t,d,'sine',1700*r,0,0,v*.32,.0005,.045);OS(t,d,'sine',820*r,0,0,v*.25,.0005,.06);OS(t,d,'sine',2450*r,0,0,v*.1,.0005,.03);NZ(t,.04,d,v*.32,.0005,.025,[['bandpass',2300,3]])},
+  hat:(t,v,d)=>{if(openG.length){cut(openG,t);openG=[]}METAL(t,d,v*.5,{bp:10000,hp:7000,dec:.045+.025*v,nz:.3})},
+  hhalf:(t,v,d)=>{if(openG.length){cut(openG,t);openG=[]}METAL(t,d,v*.38,{bp:9500,hp:6500,dec:.2,nz:.4})},
+  ohat:(t,v,d)=>{if(openG.length)cut(openG,t);openG=METAL(t,d,v*.36,{bp:9500,hp:6000,dec:.6,att:.002,nz:.4})},
+  hpedal:(t,v,d)=>{if(openG.length){cut(openG,t);openG=[]}METAL(t,d,v*.3,{bp:9000,hp:6000,dec:.03,nz:.2});NZ(t,.04,d,v*.12,.001,.02,[['lowpass',1200]])},
+  ride:(t,v,d)=>{METAL(t,d,v*.2,{sc:1.1,bp:7500,hp:3000,dec:1.4,nz:.3,nzd:.4});[2730,3920].forEach(f=>OS(t,d,'sine',f*rr(),0,0,v*.05,.001,1.2));NZ(t,.03,d,v*.15,.0005,.012,[['highpass',4000]])},
+  bell:(t,v,d)=>{[2640,3980,5600].forEach((f,i)=>OS(t,d,'sine',f,0,0,v*[.2,.12,.06][i],.0005,.9));METAL(t,d,v*.12,{sc:1.2,bp:8000,hp:3500,dec:.6,nz:.2})},
+  crash:(t,v,d)=>METAL(t,d,v*.34,{bp:8000,hp:2500,dec:2.3,att:.004,nz:.9,nzd:.85}),
+  choke:(t,v,d)=>{const g=METAL(t,d,v*.34,{bp:8000,hp:2500,dec:2.3,att:.004,nz:.9,nzd:.85});cut(g,t+.16)},
+  splash:(t,v,d)=>METAL(t,d,v*.3,{sc:1.25,bp:9500,hp:4000,dec:.7,att:.002,nz:.8}),
+  china:(t,v,d)=>METAL(t,d,v*.36,{sc:.82,bp:4500,hp:1500,dec:1.3,att:.002,ws:3,nz:.7}),
+  tomH:(t,v,d)=>tom(t,v,d,212,.45),
+  tomM:(t,v,d)=>tom(t,v,d,152,.55),
+  tomL:(t,v,d)=>tom(t,v,d,100,.75),
+  cowbell:(t,v,d)=>{const sum=ctx.createGain();sum.gain.value=.5;[587,845].forEach(f=>{const o=ctx.createOscillator();o.type='square';o.frequency.value=f;o.connect(sum);o.start(t);o.stop(t+.4)});const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=950;bp.Q.value=2.2;const g=E(t,v*.32,.001,.32);sum.connect(bp).connect(g).connect(d)},
+  block:(t,v,d)=>{OS(t,d,'sine',1150*rr(),1050,.03,v*.55,.0005,.06);NZ(t,.03,d,v*.2,.0005,.018,[['bandpass',1600,4]])},
+  tamb:(t,v,d)=>{METAL(t,d,v*.3,{sc:1.45,bp:9000,hp:6000,dec:.17,att:.002,nz:.6})},
+  shaker:(t,v,d)=>{NZ(t,.12,d,v*.24,.014,.065,[['bandpass',6500,1]])},
+  taiko:(t,v,d)=>{OS(t,d,'sine',82*rr(),46,.25,v*1.1,.002,1.15);OS(t,d,'sine',124,0,0,v*.3,.002,.5);NZ(t,.12,d,v*.55,.001,.07,[['lowpass',700]])},
+  ekick:(t,v,d)=>{OS(t,d,'sine',230,50,.05,v,.001,.32,2);NZ(t,.02,d,v*.25,.0005,.008,[['highpass',5000]])},
+  hkick:(t,v,d)=>{const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(270,t);o.frequency.exponentialRampToValueAtTime(60,t+.035);o.frequency.exponentialRampToValueAtTime(52,t+.5);const w=ctx.createWaveShaper();w.curve=shaper(9);const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4500;const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*.7,t+.002);g.gain.setValueAtTime(v*.62,t+.22);g.gain.setTargetAtTime(0,t+.22,.05);o.connect(w).connect(lp).connect(g).connect(d);o.start(t);o.stop(t+.6)},
+  b808:(t,v,d,ch)=>{const f=ch==='h'?49*Math.pow(2,7/12):49;const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(f*2.4,t);o.frequency.exponentialRampToValueAtTime(f,t+.045);const w=ctx.createWaveShaper();w.curve=shaper(1.8);const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.004);g.gain.setValueAtTime(v,t+.12);g.gain.setTargetAtTime(0,t+.12,.22);o.connect(w).connect(g).connect(d);o.start(t);o.stop(t+1.2);NZ(t,.02,d,v*.3,.0005,.012,[['lowpass',4000]])},
+  chipK:(t,v,d)=>{OS(t,d,'triangle',230,40,.09,v*.95,.001,.14)},
+  chipS:(t,v,d)=>{NZ(t,.25,d,v*.45,.001,.15,[],noise2)},
+  chipH:(t,v,d)=>{const g=NZ(t,.08,d,v*.25,.001,.04,[['highpass',4000]],noise2)}
+};
+function tom(t,v,d,f,dec){const r=rr();OS(t,d,'sine',f*1.45*r,f*r,.045,v*.9,.001,dec);OS(t,d,'sine',f*1.58*r,0,0,v*.18,.001,dec*.35);NZ(t,.04,d,v*.25,.0005,.02,[['lowpass',4000]])}
+function play(k,t,v,ch){
+  const d=bus(k);
+  if(SAMP[k]){const s=ctx.createBufferSource();s.buffer=SAMP[k];if(S.human)s.playbackRate.value=1+(Math.random()-.5)*.03*S.human/100;const g=ctx.createGain();g.gain.value=Math.pow(v,1.3);s.connect(g).connect(d);
+    if(k==='hat'||k==='hhalf'||k==='hpedal'){if(openG.length){cut(openG,t);openG=[]}}
+    if(k==='ohat'){if(openG.length)cut(openG,t);openG=[g]}
+    if(k==='choke')cut([g],t+.16);
+    s.start(t);return}
+  if(INST[k])INST[k](t,v,d,ch);
+}
+const VEL={x:.78,X:1,g:.26,h:.9,'2':.6,'3':.55,f:.82,d:.8,z:.3};
+
+/* ---------- state ---------- */
+const S={cur:null,bars:[],bpm:100,swing:50,swingUser:0,swUnit:'8',room:35,human:0,muted:new Set(),playing:false,next:0,b:0,s:0,timer:null,queue:[],cells:{}};
+const $=id=>document.getElementById(id);
+const clone=bars=>bars.map(b=>({res:b.res,beats:b.beats||4,lab:b.lab,bold:b.bold,stick:b.stick||'',t:{...b.t}}));
+const rowsOf=bars=>ROWS.filter(([k])=>bars.some(b=>b.t[k]));
+
+function load(id,autoplay){
+  const st=byId(id);S.cur=st;S.bars=clone(st.bars);S.bpm=st.bpm;S.muted.clear();
+  $('bpm').value=S.bpm;$('bpmOut').textContent=S.bpm+' BPM';
+  const four=S.bars.every(b=>b.res===4);$('swingWrap').hidden=!four;S.swing=four?(st.swing||S.swingUser||50):50;$('swing').value=S.swing;$('swingOut').textContent=S.swing+'%';S.swUnit=st.swUnit||(S.bars.some(b=>Object.values(b.t).some(v=>[...v].some((c,i)=>i%2===1&&c!=='.')))?'16':'8');swU();
+  $('iName').innerHTML=esc(st.name)+'<span class="en">'+esc(st.en)+'</span>';
+  $('iLead').textContent=st.one;
+  $('iMeta').innerHTML=(st.range?[st.cat,'BPM '+st.range,st.grid]:st.mark?['주법','표기: '+st.mark,S.bars.length+'마디 루프']:['후리기','스틱킹 '+st.stick,S.bars.length+'마디 루프']).map(x=>'<span>'+esc(x)+'</span>').join('');
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));if($('pick').options.length)$('pick').value=id;
+  S.b=0;S.s=0;if(S.playing&&ctx)S.next=ctx.currentTime+.06;
+  drawGrid();mini();
+  if(autoplay&&!S.playing)toggle();
+}
+const SHOW='23hfdz';
+function cls(ch){return ch==='X'?'c acc':ch==='g'?'c gh':(ch==='2'||ch==='3'||ch==='z')?'c roll':ch==='.'||!ch?'c':'c on'}
+function drawGrid(){
+  const rows=rowsOf(S.bars);const hasStick=S.bars.some(b=>b.stick);
+  let h='<div class="bars"><div class="lab"><div class="h">카운트</div>'+(hasStick?'<div class="h">스틱킹</div>':'')+rows.map(([k,n])=>'<div class="r'+(S.muted.has(k)?' m':'')+'" data-k="'+k+'" role="button" tabindex="0" title="음소거 켜기/끄기">'+n+'<i>'+(S.muted.has(k)?'꺼짐':'')+'</i></div>').join('')+'</div>';
+  S.bars.forEach((bar,bi)=>{
+    const n=bar.res*bar.beats,lab=bar.res===4?['','e','&','a']:bar.res===2?['','&']:Array(bar.res).fill('·');
+    h+='<div class="bar">';
+    for(let s=0;s<n;s++){
+      const beat=bar.lab?bar.bold.includes(s):s%bar.res===0,txt=bar.lab?bar.lab[s]:(s%bar.res===0?Math.floor(s/bar.res)+1:lab[s%bar.res]);
+      h+='<div class="col'+(beat&&s?' beat':'')+'" data-c="'+bi+'-'+s+'"><div class="h'+(beat?' b':'')+'">'+txt+'</div>'+(hasStick?'<div class="st">'+esc((bar.stick[s]||'').replace('.',''))+'</div>':'');
+      rows.forEach(([k])=>{const ch=(bar.t[k]||'')[s]||'.';h+='<button type="button" class="'+cls(ch)+'" data-b="'+bi+'" data-s="'+s+'" data-k="'+k+'" aria-label="'+(bi+1)+'마디 '+(s+1)+'번째 칸 '+k+'">'+(SHOW.includes(ch)&&ch!=='.'?ch:'')+'</button>'});
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  $('gridbox').innerHTML=h+'</div>';
+  S.cells={};document.querySelectorAll('#gridbox .col').forEach(c=>S.cells[c.dataset.c]=c);swVis();
+}
+function setCh(bi,s,k,ch){const bar=S.bars[bi];const n=bar.res*bar.beats;const a=(bar.t[k]||'.'.repeat(n)).split('');a[s]=ch;bar.t[k]=a.join('')}
+function cycle(ch,k){if(k==='b808')return ch==='.'?'x':ch==='x'?'h':'.';return ch==='.'?'x':ch==='x'?'X':ch==='X'?'g':'.'}
+
+/* ---------- scheduler ---------- */
+function stepDur(bar){return 60/S.bpm/bar.res}
+const SOFTMETAL=new Set(['hat','hhalf','ride','shaker','tamb','ohat']),BACK=new Set(['snare','rshot','gsnare','clap']);
+function hit(k,ch,t,d,s,res){
+  let v=VEL[ch]||.78;
+  const a=S.human/100;
+  if(a&&!ELEC.has(k)){
+    t+=(Math.random()-.5)*.036*a;
+    v*=1+(Math.random()-.5)*.5*a;
+    if(SOFTMETAL.has(k)&&ch==='x'&&res){const m=s%res;v*=m===0?1+.25*a:(res===4&&m===2)?1-.12*a:1-.35*a}
+    if(BACK.has(k)&&(ch==='x'||ch==='X'))t+=.012*a;
+    v=Math.min(v,1.15);
+  }
+  t=Math.max(t,ctx.currentTime);
+  if(ch==='2'||ch==='3'){const r=+ch;for(let i=0;i<r;i++)play(k,t+i*d/r,v*(i===0?1:.85),ch)}
+  else if(ch==='f'){play(k,Math.max(ctx.currentTime,t-.022),v*.38);play(k,t,v)}
+  else if(ch==='d'){play(k,Math.max(ctx.currentTime,t-.05),v*.34);play(k,Math.max(ctx.currentTime,t-.026),v*.36);play(k,t,v)}
+  else if(ch==='z'){for(let i=0;i<8;i++)play(k,t+i*d/8,v*(.8+Math.random()*.4))}
+  else play(k,t,v,ch);
+}
+function sched(){
+  while(S.next<ctx.currentTime+.12){
+    const bar=S.bars[S.b];const d=stepDur(bar);let t=S.next;
+    if(bar.res===4){const k=(S.swing-50)/50,m=S.s%4;if(S.swUnit==='16'){if(S.s%2===1)t+=k*d}else t+=(m===2?2*k:(m===1||m===3)?k:0)*d}
+    for(const k in bar.t){if(S.muted.has(k))continue;const ch=bar.t[k][S.s];if(!ch||ch==='.')continue;hit(k,ch,t,d,S.s,bar.res)}
+    S.queue.push({t,key:S.b+'-'+S.s});
+    S.next+=d;S.s++;if(S.s>=bar.res*bar.beats){S.s=0;S.b=(S.b+1)%S.bars.length}
+  }
+}
+let lastKey=null;
+function frame(){
+  if(!S.playing)return;
+  const now=ctx.currentTime;let key=null;
+  while(S.queue.length&&S.queue[0].t<=now){key=S.queue.shift().key}
+  if(key&&key!==lastKey){if(lastKey&&S.cells[lastKey])S.cells[lastKey].classList.remove('now');if(S.cells[key])S.cells[key].classList.add('now');lastKey=key}
+  requestAnimationFrame(frame);
+}
+function toggle(){
+  try{initAudio()}catch(e){$('iLead').textContent='이 브라우저에서는 오디오를 재생할 수 없습니다.';return}
+  if(ctx.state==='suspended')ctx.resume();
+  if(S.playing){S.playing=false;clearInterval(S.timer);S.queue=[];if(lastKey&&S.cells[lastKey])S.cells[lastKey].classList.remove('now');lastKey=null}
+  else{S.playing=true;S.b=0;S.s=0;S.next=ctx.currentTime+.06;S.queue=[];S.timer=setInterval(sched,25);sched();requestAnimationFrame(frame)}
+  $('play').textContent=S.playing?'■ 정지':'▶ 재생';$('play').classList.toggle('on',S.playing);mini();
+}
+const pio=('IntersectionObserver' in window)?new IntersectionObserver(es=>{S.vis=es[0].isIntersecting;mini()}):null;
+function mini(){const show=S.playing&&!S.vis;$('mini').hidden=!show;if(S.cur)$('miniTxt').textContent='재생 중 · '+S.cur.name+' · '+S.bpm+' BPM'}
+
+/* ---------- render content ---------- */
+const tb=s=>'<button type="button" data-id="'+s.id+'">'+esc(s.name)+'</button>';
+$('tabs').innerHTML=CATS.map(c=>'<span class="cat">'+esc(c)+'</span>'+STY.filter(s=>s.cat===c).map(tb).join('')).join('<span class="sep"></span>')+'<span class="sep"></span><span class="cat">주법</span>'+TEC.map(s=>'<button type="button" class="fill" data-id="'+s.id+'">'+esc(s.name)+'</button>').join('')+'<span class="sep"></span><span class="cat">후리기</span>'+FIL.map(s=>'<button type="button" class="fill" data-id="'+s.id+'">'+esc(s.name)+'</button>').join('');
+const refs=r=>'<div class="refs"><b>레퍼런스 찾아 듣기</b>'+r.map(([q,l])=>'<a href="'+yt(q)+'" target="_blank" rel="noopener">▸ '+esc(l)+'</a>').join('')+'<small>유튜브 검색 결과로 연결됩니다.</small></div>';
+/* ---------- wiki: links, articles, glossary, index ---------- */
+const ALIAS={swing:['재즈 스윙'],six8:['6/8'],b128:['12/8'],five4:['5/4'],seven8:['7/8'],dembow:['뎀보'],gallop:['파워 메탈'],twobeat:['스킨 비트'],jungle:['아멘 브레이크'],habanera:['하바네라','탱고'],metal:['더블 베이스'],chip:['칩튠'],dnb:['드럼 앤 베이스'],sonclave:['살사'],'t-buzz':['프레스 롤'],'t-rim':['림샷','크로스 스틱'],'t-hat':['오픈 하이햇','하프 오픈','하이햇 페달'],'t-cym':['크래시 초크','라이드 벨','차이나 심벌','스플래시'],'t-ghost':['고스트'],fbuild:['빌드업']};
+const NOBASE=new Set(['swing']);
+const TERMS=[],seenT=new Set();
+const addT=(t,h)=>{t=(t||'').trim();if(t.length<2||seenT.has(t))return;seenT.add(t);TERMS.push({t,h})};
+ALL.forEach(s=>{addT(s.name,'s-'+s.id);if(!NOBASE.has(s.id))addT(s.name.replace(/\s*\(.*?\)\s*/g,''),'s-'+s.id);(ALIAS[s.id]||[]).forEach(a=>addT(a,'s-'+s.id))});
+GLOSS.forEach(g=>[g.name,...(g.aka||[])].forEach(t=>addT(t,g.id)));
+TERMS.sort((a,b)=>b.t.length-a.t.length);
+function L(raw,self,used){let o='',i=0;while(i<raw.length){let m=null;for(const x of TERMS){if(raw.startsWith(x.t,i)){m=x;break}}
+  if(m){if(m.h===self||used.has(m.h))o+=esc(m.t);else{o+='<a class="wl" href="#'+m.h+'">'+esc(m.t)+'</a>';used.add(m.h)}i+=m.t.length}else{o+=esc(raw[i]);i++}}return o}
+const kindOf=s=>s.cat?'스타일':TEC.includes(s)?'주법':'후리기';
+const nameOf=h=>{if(SEC[h])return SEC[h];if(h.startsWith('s-')){const e=byId(h.slice(2));return e?e.name:h}const g=GLOSS.find(x=>x.id===h);return g?g.name:h};
+function relH(s,used){const me='s-'+s.id;const ids=[...used].filter(h=>h.startsWith('s-')&&h!==me);const pool=s.cat?STY.filter(x=>x.cat===s.cat):TEC.includes(s)?TEC:FIL;const same=pool.map(x=>'s-'+x.id).filter(h=>h!==me&&!ids.includes(h));const all=[...ids,...same].slice(0,8);const gl=[...used].filter(h=>h.startsWith('w-'));
+  return '<div class="rel"><b>관련 문서</b><div class="chips">'+all.map(h=>'<a href="#'+h+'">'+esc(nameOf(h))+'</a>').join('')+'</div>'+(gl.length?'<b>이 문서에 나온 용어</b><div class="chips">'+gl.map(h=>'<a class="gl" href="#'+h+'">'+esc(nameOf(h))+'</a>').join('')+'</div>':'')+'</div>'}
+const tags=a=>a.map(m=>'<span>'+esc(m)+'</span>').join('');
+function art(s){const k=kindOf(s),me='s-'+s.id,u=new Set();const one=L(s.one,me,u);const body=s.body.map(p=>'<p>'+L(p,me,u)+'</p>').join('');const tips=(s.tips||[]).length?'<ul class="tips">'+s.tips.map(t=>'<li>'+L(t,me,u)+'</li>').join('')+'</ul>':'';
+  let f;
+  if(k==='스타일')f='<dt>분류</dt><dd>'+esc(s.cat)+'</dd><dt>BPM</dt><dd>'+esc(s.range)+'</dd><dt>그리드</dt><dd>'+esc(s.grid)+'</dd><dt>킥</dt><dd>'+esc(s.kick)+'</dd><dt>스네어</dt><dd>'+esc(s.sn)+'</dd><dt>분위기</dt><dd class="tags">'+tags(s.mood)+'</dd><dt>추천 장르</dt><dd class="tags">'+tags(s.genres)+'</dd><dt>게임 장면</dt><dd class="tags">'+tags(s.games)+'</dd>';
+  else if(k==='주법')f='<dt>시퀀서 표기</dt><dd>'+esc(s.mark)+'</dd><dt>예시 BPM</dt><dd>'+s.bpm+'</dd><dt>많이 쓰는 곳</dt><dd>'+esc(s.use)+'</dd>';
+  else f='<dt>스틱킹</dt><dd><b>'+esc(s.stick)+'</b></dd><dt>예시 BPM</dt><dd>'+s.bpm+'</dd><dt>그리드</dt><dd>'+(s.bars[1].res===4?'1/16':s.bars[1].res===3?'1/8T':'1/16T')+'</dd>';
+  return '<article class="style" id="'+me+'"><div><div class="head"><h3>'+esc(s.name)+'</h3><small>'+esc(s.en)+'</small></div><p class="one">'+one+'</p>'+body+(s.note?'<div class="note">'+esc(s.note)+'</div>':'')+tips+'<button class="btn" type="button" data-load="'+s.id+'">▶ 시퀀서에서 듣기</button></div><div><dl class="facts">'+f+'</dl>'+refs(s.refs)+relH(s,u)+'</div></article>'}
+$('styleList').innerHTML=CATS.map(c=>'<h3 class="grp" id="g-'+CATS.indexOf(c)+'">'+esc(c)+'</h3>'+STY.filter(s=>s.cat===c).map(art).join('')).join('');
+$('techList').innerHTML=TEC.map(art).join('');
+$('fillList').innerHTML=FIL.map(art).join('');
+$('glossList').innerHTML=GLOSS.slice().sort((a,b)=>a.name.localeCompare(b.name,'ko')).map(g=>{const u=new Set();const d=L(g.def,g.id,u);return '<div class="gterm" id="'+g.id+'"><h3>'+esc(g.name)+(g.en?' <small>'+esc(g.en)+'</small>':'')+'</h3>'+(g.aka&&g.aka.length?'<p class="aka">같은 말: '+esc(g.aka.join(', '))+'</p>':'')+'<p>'+d+'</p>'+((g.see||[]).length?'<div class="chips">'+g.see.map(h=>'<a href="#'+h+'">'+esc(nameOf(h))+'</a>').join('')+'</div>':'')+'</div>'}).join('');
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const cho=s=>[...s].map(c=>{const n=c.charCodeAt(0)-0xAC00;return n>=0&&n<11172?CHO[Math.floor(n/588)]:c}).join('');
+const IDX=[...ALL.map(s=>({h:'s-'+s.id,n:s.name,t:s.cat||kindOf(s)})),...GLOSS.map(g=>({h:g.id,n:g.name,t:'용어'}))].sort((a,b)=>a.n.localeCompare(b.n,'ko'));
+const DBL={'ㄲ':'ㄱ','ㄸ':'ㄷ','ㅃ':'ㅂ','ㅆ':'ㅅ','ㅉ':'ㅈ'};
+const headOf=n=>{const c=cho(n[0]);return /[ㄱ-ㅎ]/.test(c)?(DBL[c]||c):/[0-9]/.test(c)?'0–9':'A–Z'};
+const IG={};IDX.forEach(x=>{const k=headOf(x.n);(IG[k]=IG[k]||[]).push(x)});
+const IGK=Object.keys(IG).sort((a,b)=>(a[0]<'ㄱ'?0:1)-(b[0]<'ㄱ'?0:1)||a.localeCompare(b,'ko'));
+$('idxJump').innerHTML=IGK.map(k=>'<a href="#ig-'+IGK.indexOf(k)+'">'+esc(k)+'</a>').join('');
+$('idxList').innerHTML=IGK.map(k=>'<div class="ig" id="ig-'+IGK.indexOf(k)+'"><h3>'+esc(k)+'</h3><div class="chips">'+IG[k].map(x=>'<a href="#'+x.h+'">'+esc(x.n)+' <small>'+esc(x.t)+'</small></a>').join('')+'</div></div>').join('');
+$('idxCount').textContent='문서 '+ALL.length+'개 · 용어 '+GLOSS.length+'개';
+
+/* ---------- search ---------- */
+const SIDX=[...ALL.map(s=>({h:'s-'+s.id,id:s.id,n:s.name,en:s.en||'',kind:kindOf(s),cat:s.cat||kindOf(s),tags:[...(s.genres||[]),...(s.mood||[]),...(s.games||[]),s.use||'',s.mark||'',s.stick||''].filter(Boolean).join(' · '),body:[s.one,...s.body,...(s.tips||[]),s.kick||'',s.sn||'',s.feel||''].join(' '),play:true})),
+  ...GLOSS.map(g=>({h:g.id,n:g.name,en:(g.en||'')+' '+(g.aka||[]).join(' '),kind:'용어',cat:'용어',tags:'',body:g.def,play:false}))];
+SIDX.forEach(x=>{x.ln=x.n.toLowerCase();x.le=x.en.toLowerCase();x.lt=x.tags.toLowerCase();x.lb=x.body.toLowerCase();x.cn=cho(x.n).replace(/\s/g,'')});
+const isCho=w=>/^[ㄱ-ㅎ]+$/.test(w);
+function score(x,w){if(isCho(w))return x.cn.includes(w)?70:0;if(x.ln.startsWith(w))return 100;if(x.ln.includes(w))return 80;if(x.le.includes(w))return 60;if(x.lt.includes(w))return 40;if(x.lb.includes(w))return 15;return 0}
+function search(q){const ws=q.toLowerCase().split(/\s+/).filter(Boolean);if(!ws.length)return[];return SIDX.map(x=>{let sc=0;for(const w of ws){const v=score(x,w);if(!v)return null;sc+=v}return{x,sc}}).filter(Boolean).sort((a,b)=>b.sc-a.sc||a.x.n.localeCompare(b.x.n,'ko')).slice(0,30)}
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function hl(text,ws){let h=esc(text);ws.forEach(w=>{if(isCho(w))return;h=h.replace(new RegExp(reEsc(esc(w)),'gi'),m=>'<mark>'+m+'</mark>')});return h}
+function snip(x,ws){const w=ws.find(w=>!isCho(w)&&!x.ln.includes(w));let src=x.body,i=-1;if(w){if(x.lt.includes(w)){src=x.tags;i=x.lt.indexOf(w)}else{i=x.lb.indexOf(w)}}
+  const t=i<0?src.slice(0,72)+(src.length>72?'…':''):(i>26?'…':'')+src.slice(Math.max(0,i-26),i+w.length+44)+'…';return hl(t,ws)}
+let act=-1,cur=[];
+const SUG=['보스','해변','레트로','재즈','메탈','라틴','후리기','ㅂㅅㄴㅂ'];
+function openRes(){$('res').hidden=false;$('q').setAttribute('aria-expanded','true')}
+function closeRes(){$('res').hidden=true;$('q').setAttribute('aria-expanded','false')}
+function renderRes(){const q=$('q').value.trim();const box=$('res');
+  if(!q){cur=[];act=-1;box.innerHTML='<div class="hint">스타일 이름, 장르, 분위기, 게임 장면, 용어로 찾아보세요. 초성 검색도 됩니다.<div class="chips">'+SUG.map(w=>'<button type="button" class="sug">'+esc(w)+'</button>').join('')+'</div></div>';openRes();return}
+  const ws=q.toLowerCase().split(/\s+/).filter(Boolean);cur=search(q);act=cur.length?0:-1;
+  box.innerHTML=cur.length?'<div class="rc">'+cur.length+'개 문서</div>'+cur.map((r,i)=>'<div class="ri" role="option" id="ri'+i+'" aria-selected="'+(i===act)+'" data-h="'+r.x.h+'"><div class="rt"><b>'+hl(r.x.n,ws)+'</b> <small>'+esc(r.x.kind)+(r.x.cat!==r.x.kind?' · '+esc(r.x.cat):'')+'</small><p>'+snip(r.x,ws)+'</p></div>'+(r.x.play?'<button type="button" class="pl" data-play="'+r.x.id+'" aria-label="'+esc(r.x.n)+' 듣기">▶</button>':'')+'</div>').join('')
+    :'<div class="hint">"'+esc(q)+'"에 맞는 문서가 없습니다. 다른 단어나 초성으로 찾아보세요.</div>';
+  openRes()}
+function setAct(i){if(!cur.length)return;act=(i+cur.length)%cur.length;document.querySelectorAll('#res .ri').forEach((el,j)=>el.setAttribute('aria-selected',j===act));const el=$('ri'+act);if(el)el.scrollIntoView({block:'nearest'});$('q').setAttribute('aria-activedescendant','ri'+act)}
+function show(h){const el=document.getElementById(h);if(!el)return;if(h==='samp')el.open=true;el.scrollIntoView({block:'start'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
+function go(h){closeRes();$('q').blur();if(location.hash==='#'+h)show(h);else location.hash=h}
+$('q').addEventListener('input',renderRes);
+$('q').addEventListener('focus',renderRes);
+$('q').addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();setAct(act+1)}else if(e.key==='ArrowUp'){e.preventDefault();setAct(act-1)}else if(e.key==='Enter'){e.preventDefault();if(cur[act])go(cur[act].x.h)}else if(e.key==='Escape'){closeRes();$('q').blur()}});
+$('res').addEventListener('mousedown',e=>e.preventDefault());
+$('res').addEventListener('click',e=>{const sg=e.target.closest('.sug');if(sg){$('q').value=sg.textContent;renderRes();$('q').focus();return}
+  const pl=e.target.closest('[data-play]');if(pl){closeRes();$('q').blur();load(pl.dataset.play,true);$('player').scrollIntoView({block:'start'});return}
+  const ri=e.target.closest('.ri');if(ri)go(ri.dataset.h)});
+document.addEventListener('click',e=>{if(!e.target.closest('.sbox'))closeRes()});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!e.target.closest('input,textarea,select')){e.preventDefault();$('q').focus()}});
+window.addEventListener('hashchange',()=>show(decodeURIComponent(location.hash.slice(1))));
+$('qclear').addEventListener('click',()=>{$('q').value='';$('q').focus();renderRes()});
+
+/* ---------- mobile style picker ---------- */
+$('pick').innerHTML=CATS.map(c=>'<optgroup label="'+esc(c)+'">'+STY.filter(s=>s.cat===c).map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('')+'</optgroup>').join('')+'<optgroup label="주법">'+TEC.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('')+'</optgroup><optgroup label="후리기">'+FIL.map(s=>'<option value="'+s.id+'">'+esc(s.name)+'</option>').join('')+'</optgroup>';
+$('pick').addEventListener('change',e=>load(e.target.value));
+document.querySelector('#cmp tbody').innerHTML=CATS.flatMap(c=>STY.filter(s=>s.cat===c)).map(s=>'<tr><td>'+esc(s.cat)+'</td><td><a href="#s-'+s.id+'">'+esc(s.name)+'</a></td><td class="n">'+s.bpm+'</td><td>'+esc(s.kick)+'</td><td>'+esc(s.sn)+'</td><td>'+esc(s.feel)+'</td><td>'+esc(s.games.slice(0,2).join(', '))+'</td></tr>').join('');
+
+/* ---------- events ---------- */
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-id]');if(b)load(b.dataset.id)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-load]');if(b){load(b.dataset.load,true);$('player').scrollIntoView({block:'start'})}});
+$('gridbox').addEventListener('click',e=>{
+  const c=e.target.closest('button.c');
+  if(c){const bi=+c.dataset.b,s=+c.dataset.s,k=c.dataset.k;const ch=(S.bars[bi].t[k]||'')[s]||'.';const nx=cycle(ch,k);setCh(bi,s,k,nx);c.className=cls(nx);c.textContent=(nx==='h')?'h':'';swVis();return}
+  const r=e.target.closest('.r');if(r){const k=r.dataset.k;S.muted.has(k)?S.muted.delete(k):S.muted.add(k);r.classList.toggle('m');r.querySelector('i').textContent=S.muted.has(k)?'꺼짐':''}
+});
+$('gridbox').addEventListener('keydown',e=>{const r=e.target.closest('.r');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.click()}});
+$('play').addEventListener('click',toggle);$('miniStop').addEventListener('click',toggle);
+$('bpm').addEventListener('input',e=>{S.bpm=+e.target.value;$('bpmOut').textContent=S.bpm+' BPM';mini()});
+$('swing').addEventListener('input',e=>{S.swing=+e.target.value;S.swingUser=S.swing;$('swingOut').textContent=S.swing+'%';swVis()});
+function swU(){document.querySelectorAll('.unit button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.u===S.swUnit))}
+function swVis(){
+  const k=(S.swing-50)/50;let odd=false;
+  S.bars.forEach((bar,bi)=>{if(bar.res!==4)return;for(let s=0;s<bar.res*bar.beats;s++){const m=s%4;if(s%2&&Object.values(bar.t).some(v=>v[s]&&v[s]!=='.'))odd=true;const f=S.swUnit==='16'?(s%2?k:0):(m===2?2*k:(m%2?k:0));const c=S.cells[bi+'-'+s];if(c)c.querySelectorAll('.c').forEach(x=>x.style.transform=f?'translateX('+(f*27).toFixed(1)+'px)':'')}});
+  $('gridbox').classList.toggle('sw',k>0&&S.bars.every(b=>b.res===4));
+  const h=$('swHint');if(!h)return;
+  if(!S.bars.every(b=>b.res===4)){h.textContent='';return}
+  h.textContent=S.swing===50?'스윙 50%는 정박입니다. 슬라이더를 올리면 밀리는 음이 그리드에서 오른쪽으로 움직여요. 8분·16분 기준의 차이도 스윙을 올려야 들립니다.'
+   :(S.swUnit==='16'&&!odd)?'이 패턴은 16분 엇박(e, a)에 음이 없어서 16분 기준으로는 아무것도 밀리지 않습니다. 8분 기준으로 바꿔 보세요.'
+   :S.swUnit==='16'?'16분 기준: & 자리는 그대로 두고 e와 a만 뒤로 밀립니다. 박 안에서 잘게 튀는 느낌이에요.'
+   :'8분 기준: & 자리가 크게 밀리고, e와 a는 그 사이를 나눠 갖습니다. 셔플처럼 크게 출렁이는 느낌이에요.';
+}
+document.querySelector('.unit').addEventListener('click',e=>{const b=e.target.closest('button[data-u]');if(b){S.swUnit=b.dataset.u;swU();swVis()}});
+const roomTxt=()=>{$('roomOut').textContent=S.room+' · '+roomName(S.room)};roomTxt();
+$('room').addEventListener('input',e=>{S.room=+e.target.value;roomTxt();if(wetGain){wetGain.gain.setTargetAtTime(wetAmt(),ctx.currentTime,.03);dryBus.gain.setTargetAtTime(dryAmt(),ctx.currentTime,.03)}});
+$('room').addEventListener('change',()=>{if(conv)conv.buffer=makeIR(irLen())});
+const hName=h=>h===0?'끔 (기계)':h<35?h+' · 약하게':h<70?h+' · 보통':h+' · 강하게';
+$('human').addEventListener('input',e=>{S.human=+e.target.value;$('humanOut').textContent=hName(S.human)});
+const MAP=[['b808',/808/],['hkick',/hard|gabber|distort/],['ekick',/909|elec|edm/],['chipK',/chip.*k/],['kick',/kick|bd|bass.?drum/],['rshot',/rimshot|rim.?shot/],['rim',/rim|stick|xst|cross/],['gsnare',/gate/],['clap',/clap|cp/],['snare',/snare|sd/],['choke',/choke/],['china',/china/],['splash',/splash/],['crash',/crash/],['cowbell',/cow/],['bell',/bell/],['ride',/ride/],['ohat',/open|\boh/],['hhalf',/half/],['hpedal',/pedal|foot/],['hat',/hat|hh|chh/],['tomH',/(tom|t).?(1|hi|high)|hitom|rack/],['tomM',/(tom|t).?(2|mid)/],['tomL',/floor|(tom|t).?(3|lo|low)/],['taiko',/taiko/],['tamb',/tamb/],['block',/block|clave|wood/],['shaker',/shak|cabasa/]];
+function sList(){$('slist').innerHTML=ROWS.map(([k,n])=>'<div class="srow"><span class="sn">'+esc(n)+'</span><span class="sf">'+(SNAME[k]?esc(SNAME[k]):'<i>합성 소리</i>')+'</span><label class="ghost filebtn sm">파일<input type="file" accept="audio/*" data-k="'+k+'" hidden></label>'+(SNAME[k]?'<button type="button" class="ghost sm" data-del="'+k+'">지우기</button>':'')+'</div>').join('')}
+async function loadSample(k,file){initAudio();const buf=await file.arrayBuffer();const ab=await new Promise((res,rej)=>ctx.decodeAudioData(buf,res,rej));SAMP[k]=ab;SNAME[k]=file.name}
+$('slist').addEventListener('change',async e=>{const i=e.target.closest('input[data-k]');if(!i||!i.files[0])return;try{await loadSample(i.dataset.k,i.files[0]);$('smsg').textContent=''}catch(err){$('smsg').textContent=i.files[0].name+' 파일을 읽지 못했습니다.'}sList()});
+$('slist').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(b){delete SAMP[b.dataset.del];delete SNAME[b.dataset.del];sList()}});
+$('multi').addEventListener('change',async e=>{let ok=0,miss=[];for(const f of e.target.files){const nm=f.name.toLowerCase();const m=MAP.find(([,re])=>re.test(nm));if(!m){miss.push(f.name);continue}try{await loadSample(m[0],f);ok++}catch(err){miss.push(f.name)}}$('smsg').textContent=ok+'개 연결'+(miss.length?', 자리를 못 찾은 파일: '+miss.slice(0,4).join(', ')+(miss.length>4?' 외 '+(miss.length-4)+'개':''):'');sList();e.target.value=''});
+$('sclear').addEventListener('click',()=>{for(const k in SAMP){delete SAMP[k];delete SNAME[k]}$('smsg').textContent='';sList()});
+sList();
+$('sampLink').addEventListener('click',e=>{e.preventDefault();$('samp').open=true;$('samp').scrollIntoView({block:'center'})});
+$('reset').addEventListener('click',()=>{const was=S.playing;load(S.cur.id);if(was&&ctx){S.next=ctx.currentTime+.06}});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.target.closest('input,button,a,[role=button]')){e.preventDefault();toggle()}});
+if(pio)pio.observe($('player'));
+load('eight');
+if(location.hash)setTimeout(()=>show(decodeURIComponent(location.hash.slice(1))),80);
+}
+</script>
+</body>
+</html>
